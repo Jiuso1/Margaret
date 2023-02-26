@@ -16,12 +16,12 @@ struct WindowInfo {
 
 vector<WindowInfo> windowInfoList;//Variable global, no hay otro modo si no podemos tocar qué retorna ni los parámetros de la función EnumWindowsProc(...)
 
+void inicializarContadores(unsigned long long int tiempoPrograma[], const size_t nProgramas);
 bool contains(string o, string s);//Le pasamos el output y hacemos find directamente.
 bool contains(vector<WindowInfo> vectorWI, string s);
 bool anadirPrograma(string p);
 void eliminarPrograma(string p);
 bool existePrograma(string p);
-//bool buscarProgramaArchivo(string p);
 void menu();
 void escribirCreditos();
 vector<string> getProgramasArchivo();
@@ -55,10 +55,9 @@ int main() {
 		{11,"noviembre" },
 		{12,"diciembre" },
 	};
+	int diaActual = 0;//Almacenará el día actual. En caso de que cambie, le asignaremos 0 a los contadores, ha empezado un nuevo día.
 
-	for (int i = 0; i < nProgramasArchivo + 1; i++) {
-		tiempoPrograma[i] = 0;//Inicializamos a cero cada tiempo.
-	}
+	//inicializarContadores(tiempoPrograma,nProgramasArchivo);//Le asignaremos 0 al tiempo de cada programa, inicializándolos así.
 
 	while (true) {
 		windowInfoList.clear();
@@ -68,7 +67,11 @@ int main() {
 		/*cout << "nProgramas archivo vale " << nProgramasArchivo << endl;
 		system("pause");*/
 		GetLocalTime(&st);
-		cout << "A dia "<<st.wDay<<" de " << nombreMes[st.wMonth]<<endl;
+		if (st.wDay != diaActual) {//Si cambia el día...
+			diaActual = st.wDay;//El día actual será otro...
+			inicializarContadores(tiempoPrograma,nProgramasArchivo);//Y los contadores se reiniciarán.
+		}
+		cout << "A dia " << diaActual << " de " << nombreMes[st.wMonth] << endl;
 		for (int i = 0; i < nProgramasArchivo; i++) {
 			segundos = tiempoPrograma[i] / 1000;
 			if (segundos < 60) {
@@ -98,6 +101,12 @@ int main() {
 		Sleep(espera);
 	}
 	return 0;
+}
+//Inicializa todos los contadores a 0.
+void inicializarContadores(unsigned long long int tiempoPrograma[],const size_t nProgramas) {
+	for (int i = 0; i < nProgramas; i++) {
+		tiempoPrograma[i] = 0;
+	}
 }
 /*Añade el programa pasado por parámetro al archivo.
 Retorna true si se ha añadido correctamente, false en caso contrario.
