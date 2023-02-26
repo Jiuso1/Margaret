@@ -195,7 +195,7 @@ bool contains(vector<WindowInfo> vectorWI, string s) {
 	return encontrado;
 }
 void menu() {
-	int input[2] = { 0,0 };
+	char input[2] = { 0,0 };
 	string programaDeseado;
 	bool encontrado = false;
 	vector<string> programasAnhadidos;//Vector que almacena los programas abiertos al momento de ir a la opción de añadir programas.
@@ -211,45 +211,52 @@ void menu() {
 		cin >> input[0];//Antes lo hacía con getch().
 		system("cls");
 		switch (input[0]) {
-		case 1: {
+		case '1': {
 			arranqueMargaret = true;
 			cout << "Iniciando Margaret" << endl;
 			system("pause");
 			system("cls");
 		}
 			  break;
-		case 2: {
+		case '2': {
 			do {
 				system("cls");
 				cout << "Gestion de programas monitorizados" << endl;
 				cout << "Pulse la opcion deseada" << endl;
 				cout << "1. Anhadir programa" << endl;
 				cout << "2. Eliminar programa" << endl;
+				cout << "3. Salir al menu principal" << endl;
 				cin >> input[1];//Antes lo hacía con getch().
 				switch (input[1]) {
-				case 1: {
+				case '1': {
 					system("cls");
 					cout << "Programas abiertos actualmente" << endl;
 					for (int i = 0; i < windowInfoList.size(); i++) {
 						wcout << nombreProceso(windowInfoList[i].processName)<<endl;
 					}
 					cin.ignore();
-					cout << "Introduzca el nombre del programa a anhadir:";
+					cout << "Introduzca el nombre del programa a anhadir (q para salir):";
 					getline(cin, programaDeseado);
-					if (anadirPrograma(programaDeseado) == true) {
-						cout << "Programa anhadido correctamente" << endl;
-						system("pause");
+					if (programaDeseado == "q") {
 						system("cls");
 					}
 					else {
-						system("cls");
-						cout << "Error: recuerde no repetir el programa" << endl;
-						input[1] = '\0';
-						system("pause");
+						if (anadirPrograma(programaDeseado) == true) {
+							cout << "Programa anhadido correctamente" << endl;
+							system("pause");
+							system("cls");
+						}
+						else {
+							system("cls");
+							cout << "Error: recuerde no repetir el programa" << endl;
+							input[1] = '\0';
+							system("pause");
+						}
 					}
+					
 				}
 					  break;
-				case 2: {
+				case '2': {
 					system("cls");
 					cin.ignore();
 					programasAnhadidos = getProgramasArchivo();
@@ -262,34 +269,45 @@ void menu() {
 						for (int i = 0; i < programasAnhadidos.size(); i++) {
 							cout << programasAnhadidos[i] << endl;
 						}
-						cout << "Introduzca el programa a eliminar:";
+						cout << "Introduzca el programa a eliminar (q para salir):";
 						getline(cin, programaDeseado);
-						encontrado = existePrograma(programaDeseado);
-						if (!encontrado) {
+						if (programaDeseado == "q") {
 							system("cls");
-							cout << "Error: el programa indicado no existe en el archivo." << endl;
-							input[1] = '\0';
-							system("pause");
 						}
 						else {
-							eliminarPrograma(programaDeseado);
-							cout << "Programa eliminado con exito" << endl;
-							system("pause");
-							system("cls");
+							encontrado = existePrograma(programaDeseado);
+							if (!encontrado) {
+								system("cls");
+								cout << "Error: el programa indicado no existe en el archivo." << endl;
+								input[1] = '\0';
+								system("pause");
+							}
+							else {
+								eliminarPrograma(programaDeseado);
+								cout << "Programa eliminado con exito" << endl;
+								system("pause");
+								system("cls");
+							}
 						}
 					}
 				}
 					  break;
+				case '3': {
+					system("cls");
+					programaDeseado = "q";
+				}
+						break;
 				default: {
 					system("cls");
 					cout << "Error: introduzca un valor valido" << endl;
 					system("pause");
+					system("cls");
 				}
 				}
-			} while (input[1] < 1 || input[1]>2);
+			} while ((input[1] < '1' || input[1]> '3') && (programaDeseado != "q"));
 		}
 			  break;
-		case 3: {
+		case '3': {
 			thread t1(escribirCreditos);
 			PlaySound(TEXT("C:/Users/jesus/Documents/C++/ProyectosVisualStudio/Margaret/Margaret/musicaCreditos.wav"), 0, SND_FILENAME);
 			t1.join();
@@ -300,6 +318,7 @@ void menu() {
 			system("cls");
 			cout << "Error: introduzca un valor valido" << endl;
 			system("pause");
+			system("cls");
 		}
 		}
 	} while (!arranqueMargaret);//while (input[0] < 1 || input[0] > 3 || (input[1] == 0 && (input[0] < 1 || input[0] > 3)));
