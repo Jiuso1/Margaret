@@ -57,8 +57,6 @@ int main() {
 	};
 	int diaActual = 0;//Almacenará el día actual. En caso de que cambie, le asignaremos 0 a los contadores, ha empezado un nuevo día.
 
-	//inicializarContadores(tiempoPrograma,nProgramasArchivo);//Le asignaremos 0 al tiempo de cada programa, inicializándolos así.
-
 	while (true) {
 		windowInfoList.clear();
 		EnumWindows(EnumWindowsProc, NULL);
@@ -66,6 +64,7 @@ int main() {
 
 		/*cout << "nProgramas archivo vale " << nProgramasArchivo << endl;
 		system("pause");*/
+
 		GetLocalTime(&st);
 		if (st.wDay != diaActual) {//Si cambia el día...
 			diaActual = st.wDay;//El día actual será otro...
@@ -238,6 +237,8 @@ void menu() {
 				cin >> input[1];//Antes lo hacía con getch().
 				switch (input[1]) {
 				case '1': {
+					windowInfoList.clear();//Actualizamos windowInfoList para cuando abra la opción.
+					EnumWindows(EnumWindowsProc, NULL);
 					system("cls");
 					cout << "Programas abiertos actualmente" << endl;
 					for (int i = 0; i < windowInfoList.size(); i++) {
