@@ -21,7 +21,8 @@ bool contains(string o, string s);//Le pasamos el output y hacemos find directam
 bool contains(vector<WindowInfo> vectorWI, string s);
 bool anadirPrograma(string p);
 void eliminarPrograma(string p);
-bool existePrograma(string p);
+bool existeProgramaArchivo(string p);
+bool existeProgramaWindowInfoList(string p);
 void menu();
 void escribirCreditos();
 vector<string> getProgramasArchivo();
@@ -68,7 +69,7 @@ int main() {
 		GetLocalTime(&st);
 		if (st.wDay != diaActual) {//Si cambia el día...
 			diaActual = st.wDay;//El día actual será otro...
-			inicializarContadores(tiempoPrograma,nProgramasArchivo);//Y los contadores se reiniciarán.
+			inicializarContadores(tiempoPrograma, nProgramasArchivo);//Y los contadores se reiniciarán.
 		}
 		cout << "A dia " << diaActual << " de " << nombreMes[st.wMonth] << endl;
 		for (int i = 0; i < nProgramasArchivo; i++) {
@@ -102,7 +103,7 @@ int main() {
 	return 0;
 }
 //Inicializa todos los contadores a 0.
-void inicializarContadores(unsigned long long int tiempoPrograma[],const size_t nProgramas) {
+void inicializarContadores(unsigned long long int tiempoPrograma[], const size_t nProgramas) {
 	for (int i = 0; i < nProgramas; i++) {
 		tiempoPrograma[i] = 0;
 	}
@@ -110,11 +111,13 @@ void inicializarContadores(unsigned long long int tiempoPrograma[],const size_t 
 /*Añade el programa pasado por parámetro al archivo.
 Retorna true si se ha añadido correctamente, false en caso contrario.
 Se preocupa por no añadir programas ya insertados en el archivo.
+Tampoco añade programas que no existan en windowInfoList. Esto
+es para evitar que se puedan añadir programas inexistentes.
 */
 bool anadirPrograma(string p) {
 	ofstream escritura;
 	bool exito = false;
-	if (!existePrograma(p)) {
+	if (!existeProgramaArchivo(p) && existeProgramaWindowInfoList(p)) {
 		escritura.open("C:/Users/jesus/Documents/C++/ProyectosVisualStudio/Margaret/x64/Debug/listaProgramas.txt", ios::app);//Con ios::app respetamos el contenido previo y no sobreescribimos.
 		if (escritura.is_open()) {
 			escritura << p << endl;
@@ -133,7 +136,7 @@ void eliminarPrograma(string p) {
 	string programa;//Programa que se va almacenando temporalmente en cada iteración.
 	bool eliminado = false;//Si se ha eliminado correctamente el archivo, valdrá true.
 
-	if (!existePrograma(p)) {
+	if (!existeProgramaArchivo(p)) {
 		cout << "Error: no existe el programa que desea eliminar.";
 	}
 	else {
@@ -168,7 +171,7 @@ void eliminarPrograma(string p) {
 	archivo2.close();
 }
 //Retorna true si el programa pasado por parámetro existe en el archivo listaProgramas.txt.
-bool existePrograma(string p) {
+bool existeProgramaArchivo(string p) {
 	ifstream lectura;
 	bool existe = false;
 	string programa = "";
@@ -184,6 +187,21 @@ bool existePrograma(string p) {
 	lectura.close();
 	return existe;
 }
+bool existeProgramaWindowInfoList(string p) {
+	bool existe = false;
+	int i = 0;
+	while (existe == false && i < windowInfoList.size()) {
+		wstring processName = nombreProceso(windowInfoList[i].processName);
+		string processNameString(processName.begin(),processName.end());
+		if (p == processNameString) {
+			existe = true;
+		}
+		else {
+			i++;
+		}
+	}
+	return existe;
+}
 bool contains(string o, string s) {
 	if (o.find(s) != string::npos) {
 		return true;
@@ -195,7 +213,7 @@ bool contains(string o, string s) {
 bool contains(vector<WindowInfo> vectorWI, string s) {
 	bool encontrado = false;
 	for (int i = 0; i < vectorWI.size(); i++) {
-		string processNameString(vectorWI[i].processName.begin(), vectorWI[i].processName.end());
+		string processNameString(vectorWI[i].processName.begin(), vectorWI[i].processName.end());//Así es como transformamos de wstring a string.
 		if (processNameString.find(s) != string::npos) {
 			encontrado = true;
 		}
@@ -225,7 +243,7 @@ void menu() {
 			system("pause");
 			system("cls");
 		}
-			  break;
+				break;
 		case '2': {
 			do {
 				system("cls");
@@ -242,7 +260,7 @@ void menu() {
 					system("cls");
 					cout << "Programas abiertos actualmente" << endl;
 					for (int i = 0; i < windowInfoList.size(); i++) {
-						wcout << nombreProceso(windowInfoList[i].processName)<<endl;
+						wcout << nombreProceso(windowInfoList[i].processName) << endl;
 					}
 					cin.ignore();
 					cout << "Introduzca el nombre del programa a anhadir (q para salir):";
@@ -258,14 +276,14 @@ void menu() {
 						}
 						else {
 							system("cls");
-							cout << "Error: recuerde no repetir el programa" << endl;
+							cout << "Error: el programa ya existe en el archivo o no se ha escrito el programa correctamente" << endl;
 							input[1] = '\0';
 							system("pause");
 						}
 					}
-					
+
 				}
-					  break;
+						break;
 				case '2': {
 					system("cls");
 					cin.ignore();
@@ -285,7 +303,7 @@ void menu() {
 							system("cls");
 						}
 						else {
-							encontrado = existePrograma(programaDeseado);
+							encontrado = existeProgramaArchivo(programaDeseado);
 							if (!encontrado) {
 								system("cls");
 								cout << "Error: el programa indicado no existe en el archivo." << endl;
@@ -301,7 +319,7 @@ void menu() {
 						}
 					}
 				}
-					  break;
+						break;
 				case '3': {
 					system("cls");
 					programaDeseado = "q";
@@ -316,14 +334,14 @@ void menu() {
 				}
 			} while ((input[1] < '1' || input[1]> '3') && (programaDeseado != "q"));
 		}
-			  break;
+				break;
 		case '3': {
 			thread t1(escribirCreditos);
 			PlaySound(TEXT("C:/Users/jesus/Documents/C++/ProyectosVisualStudio/Margaret/Margaret/musicaCreditos.wav"), 0, SND_FILENAME);
 			t1.join();
 			system("cls");
 		}
-			  break;
+				break;
 		default: {
 			system("cls");
 			cout << "Error: introduzca un valor valido" << endl;
@@ -336,7 +354,7 @@ void menu() {
 
 // Devuelve un vector con los strings que buscara los procesos
 void escribirCreditos() {
-	vector<string> nombre = {"Persona 1","Persona 2","Persona 3","Persona 4","Persona 5"};
+	vector<string> nombre = { "Persona 1","Persona 2","Persona 3","Persona 4","Persona 5" };
 	map<string, string> personicas = {
 		{"Persona 1","Por..."},
 		{"Persona 2","Por..."},
