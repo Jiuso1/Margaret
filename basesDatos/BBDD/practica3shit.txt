@@ -1,0 +1,126 @@
+/*P.10 Mediante un procedimiento almacenado, se quiere mostrar una estadística por cada asignatura, del 
+porcentaje de alumnos aprobados respecto a los presentados en la convocatoria feb_jun, para un curso y un
+añoacadémicodadoscomoparámetros.
+Porejemplo, la llamadaporcentaje_aprobados(2,2002),mostraríalos porcentajesdelas asignaturas del 2ºcursoenelaño
+2002.*/
+--Alto porro, este es el ejemplo resumen y es mejor volver a verlo cuando se haya dado todo lo siguiente.
+/*P.20 Diseñar la función facturacion(), la cual admite dos parámetros de entrada (un teléfono y un año) y
+devuelve la facturacióntotaldeesenúmeroeneseaño.
+Lafuncióndebecontrolar2tiposdeexcepciones:
+- elteléfononoexisteoelteléfononoharealizadollamadaseseaño. 
+- lafacturacióndelteléfonoesinferiora1euro
+
+Empezamos primeramente con:
+CREATE or REPLACE 
+FUNCTION facturacion( p_tf_origen MF.LLAMADA.tf_origen%type, p_año INTEGER) --Los parámetros que recoge la función. En este caso, el primer parámetro tendrá como tipo el mismo tipo que la columna MF.LLAMADA.TF_ORIGEN, mientras que el segundo parámetro tendrá como tipo INTEGER.
+RETURN float IS --Retorna un float
+--Declaraciones locales
+--BEGIN 
+--Sentencias 
+--EXCEPTION 
+-- Tratamiento de Excepciones 
+--END facturación;
+
+Ya tengo la consulta hecha con el año y número de tf_origen que me ha dado a mí la gana. Vamos de lo especí-
+fico a lo general.
+SELECT SUM(TAR.COSTE*LLAM.DURACION)
+FROM MF.LLAMADA LLAM
+JOIN MF.TELEFONO TEL
+ON LLAM.TF_ORIGEN=TEL.NUMERO
+JOIN MF.TARIFA TAR
+ON TEL.TARIFA=TAR.TARIFA
+WHERE EXTRACT(YEAR FROM FECHA_HORA)=2006 AND LLAM.TF_ORIGEN=654012012;
+
+Ahora vamos a crear el procedimiento pero con los parámetros que nos dan.
+*/
+/*
+CREATE OR REPLACE 
+FUNCTION facturacion(P_TF_ORIGEN MF.LLAMADA.TF_ORIGEN%TYPE, P_AÑO INTEGER)
+RETURN FLOAT IS
+--Declaraciones locales
+IMPORTE_TOTAL NUMBER(10,2);
+FACTURACIONBAJA EXCEPTION;
+BEGIN
+--Bloque de sentencias
+SELECT SUM(TAR.COSTE*LLAM.DURACION) INTO IMPORTE_TOTAL  --Lo que hacemos aquí es meter el resultado del SELECT en la variable IMPORTE_TOTAL.
+FROM MF.LLAMADA LLAM
+JOIN MF.TELEFONO TEL
+ON LLAM.TF_ORIGEN=TEL.NUMERO
+JOIN MF.TARIFA TAR
+ON TEL.TARIFA=TAR.TARIFA
+WHERE EXTRACT(YEAR FROM FECHA_HORA)=P_AÑO AND LLAM.TF_ORIGEN=P_TF_ORIGEN;
+--Activamos la excepción si IMPORTE_TOTAL<1:
+IF(IMPORTE_TOTAL<1) THEN
+    RAISE FACTURACIONBAJA;
+END IF;
+--Retornamos el iimporte total:
+RETURN IMPORTE_TOTAL;
+--Por último, especificamos qué se hace en caso de excepción:
+EXCEPTION
+WHEN FACTURACIONBAJA THEN   --Esta es la excepción que hemos declarado en el BEGIN.
+    DBMS_OUTPUT.PUT_LINE('Facturación demasiado baja, F');
+    RETURN -1;
+WHEN NO_DATA_FOUND  THEN    --Esta excepción viene en la propia librería
+    DBMS_OUTPUT.PUT_LINE('El teléfono no existe o no ha realizado llamadas ese año');
+    RETURN -1;
+WHEN OTHERS THEN    --También viene en la propia librería, y no tenemos npi de qué error sería.
+    DBMS_OUTPUT.PUT_LINE('Ha ocurrido un error');
+    RETURN -1;
+--En todas las excepciones retornaremos -1.
+END facturacion;*/
+SELECT FACTURACION(678234234,2006) FROM DUAL;   --Así es como puedo probar las funciones que cree.
+CALL DBMS_OUTPUT.PUT_LINE(FACTURACION(678234234,2006)); --En teoría también se puede llamar así pero a mí no me funciona.
+/*  P.29
+DiseñarelprocedimientoLlamadaFacturacion(año), elcual, paracadateléfonode la tablaLLAMADA, debe 
+realizaruna llamadaa la función facturación(tel,año) y mostrar la facturación de dicho 
+teléfonoenelañoqueselepasecomoparámetro.
+*/
+/* Falla y npi de por qué, me ignora la consulta sql y he buscado pero npi de why.
+CREATE OR REPLACE 
+PROCEDURE LLAMADAFACTURACION(P_AÑO INTEGER) IS   --Este procedimiento no retornará nada, solo pondré el IS.
+--Declaraciones locales
+CURSOR C_TELEFONOS IS
+    SELECT DISTINCT TF_ORIGEN 
+    FROM MF.LLAMADA
+    WHERE EXTRACT(YEAR FROM FECHA_HORA)=P_AÑO   --La consulta los retornará el conjunto de diferentes números que llamaron en x año.
+BEGIN
+--Bloque de sentencias
+FOR R_TELEFONO IN C_TELEFONOS LOOP
+DBMS_OUTPUT.PUT_LINE(R_TELEFONO.TF_ORIGEN || ''' || FACTURACION(R_TELEFONO.TF_ORIGEN,AÑO));
+END LOOP;
+--Tratamiento de excepciones
+EXCEPTION
+WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Ha ocurrido un error, efisima');
+*/
+/*Crear un procedimiento que tenga como parámetros de entradaelnombredeunacompañíayunafecha.
+Dichoprocedimiento deberealizarlassiguientesoperaciones:
+1. Comprobar que existen en la BD llamadas realizadas en la fecha que se pasa como parámetro. En caso 
+contrario lanzar una Eexcepciónymostrarelmensaje“Nohay llamadas de teléfonos de lacompañía<compañía>
+enlafecha<fecha>enlaBD”.
+2. Para cada teléfono de la compañía que pasa por parámetro, el procedimiento debe mostrar la siguiente 
+información: número de teléfono, número totalde llamadas realizadas en la fecha indicada, número de
+llamadas de duración mayor de 100 segundos realizadas en la fecha, porcentaje que suponen estas últimas 
+respectoaltotaldelasrealizadas.
+3. Un resumen del número de llamadas realizadas por todos los teléfonos de la compañía indicada en la 
+fecha pasada por parámetro.*/
+CREATE OR REPLACE
+PROCEDURE llamadas_cia(cia MF.COMPAÑIA.NOMBRE%type, fecha DATE)
+    CURSOR c_telefonos_cia IS
+        SELECT numero
+        FROM MF.COMPAÑIA C
+        JOIN MF.TELEFONO TEL
+        ON C.CIF=TEL.COMPAÑIA
+        WHERE C.NOMBRE=cia;
+filas_llamadas_fechaINTEGER; 
+no_existe_llamadas_fechaEXCEPTION;
+BEGIN
+SELECT COUNT(*) INTO filas_llamadas_fecha FROM (LLAMADA LLAMINNER JOIN TELEFONO TEL ON LLAM.tf_origen=TEL.numero)
+INNER JOIN COMPAÑIA CIAON CIA.cif=TEL.compañia
+WHERE TO_CHAR(LLAM.fecha_hora,'dd/mm/yy') = fecha AND CIA.nombre=cia;
+IF filas_llamadas_fecha= 0 THEN RAISE no_existe_llamadas_fecha;
+END IF;
+EXCEPTION
+WHEN no_existe_llamadas_fecha THEN dbms_output.put_line('No hay llamadas del ' || fecha|| ' en la BD');
+WHEN OTHERS THEN dbms_output.put_line('Ha ocurrido un error');
+END llamadas_cia;
