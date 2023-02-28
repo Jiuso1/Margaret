@@ -2,10 +2,10 @@
 #include <fstream>//File IO.
 #include <string>
 #include <vector>//Para crear vectores de string principalmente.
-#include <windows.h>//Para consultar los procesos con ventana abierta y para la música de los créditos.
-#include <thread>//Para escribir a la vez que se reproduce la música.
+#include <windows.h>//Para consultar los procesos con ventana abierta y para la mÃºsica de los crÃ©ditos.
+#include <thread>//Para escribir a la vez que se reproduce la mÃºsica.
 #include <map>//Para mapear el nombre de la persona con la frase dedicada a ella.
-#pragma comment(lib, "winmm.lib")//Para la música de los créditos.
+#pragma comment(lib, "winmm.lib")//Para la mÃºsica de los crÃ©ditos.
 
 using namespace std;
 
@@ -14,7 +14,7 @@ struct WindowInfo {
 	wstring processName;
 };
 
-vector<WindowInfo> windowInfoList;//Variable global, no hay otro modo si no podemos tocar qué retorna ni los parámetros de la función EnumWindowsProc(...)
+vector<WindowInfo> windowInfoList;//Variable global, no hay otro modo si no podemos tocar quÃ© retorna ni los parÃ¡metros de la funciÃ³n EnumWindowsProc(...)
 
 void inicializarContadores(unsigned long long int tiempoPrograma[], const size_t nProgramas);
 bool contains(string o, string s);//Le pasamos el output y hacemos find directamente.
@@ -31,15 +31,15 @@ wstring nombreProceso(wstring cadenaCompleta);
 
 int main() {
 	const int espera = 10000;//Valor en ms de intervalo de tiempo.
-	vector<string> programasArchivo;//Almacena los programas leídos en el archivo listaProgramas.txt.
+	vector<string> programasArchivo;//Almacena los programas leÃ­dos en el archivo listaProgramas.txt.
 	EnumWindows(EnumWindowsProc, NULL);
 
 	menu();
 
-	programasArchivo = getProgramasArchivo();//Almacenamos los programas leídos en el archivo en programasArchivo.
-	const size_t nProgramasArchivo = programasArchivo.size();//Almacenamos el número de programas leídos en nProgramasArchivo. Almacena el número de programas del archivo listaProgramas.txt.
-	unsigned long long int tiempoPrograma[10] = {};//Declaramos un array para el tiempo de cada programa. Como Visual Studio no nos deja declarar el tamaño del array en función del nº de programas, pondremos 10 por ejemplo.
-	unsigned _int64 segundos = 0, minutos = 0, horas = 0;//Estas variables almacenarán los valores temporales de la medición del tiempo.
+	programasArchivo = getProgramasArchivo();//Almacenamos los programas leÃ­dos en el archivo en programasArchivo.
+	const size_t nProgramasArchivo = programasArchivo.size();//Almacenamos el nÃºmero de programas leÃ­dos en nProgramasArchivo. Almacena el nÃºmero de programas del archivo listaProgramas.txt.
+	unsigned long long int tiempoPrograma[10] = {};//Declaramos un array para el tiempo de cada programa. Como Visual Studio no nos deja declarar el tamaÃ±o del array en funciÃ³n del nÂº de programas, pondremos 10 por ejemplo.
+	unsigned _int64 segundos = 0, minutos = 0, horas = 0;//Estas variables almacenarÃ¡n los valores temporales de la mediciÃ³n del tiempo.
 
 	SYSTEMTIME st;//Variable que nos sirve para almacenar la fecha actual gracias a la Windows API.
 	map<int, string> nombreMes = {
@@ -56,7 +56,7 @@ int main() {
 		{11,"noviembre" },
 		{12,"diciembre" },
 	};
-	int diaActual = 0;//Almacenará el día actual. En caso de que cambie, le asignaremos 0 a los contadores, ha empezado un nuevo día.
+	int diaActual = 0;//AlmacenarÃ¡ el dÃ­a actual. En caso de que cambie, le asignaremos 0 a los contadores, ha empezado un nuevo dÃ­a.
 
 	while (true) {
 		windowInfoList.clear();
@@ -67,9 +67,9 @@ int main() {
 		system("pause");*/
 
 		GetLocalTime(&st);
-		if (st.wDay != diaActual) {//Si cambia el día...
-			diaActual = st.wDay;//El día actual será otro...
-			inicializarContadores(tiempoPrograma, nProgramasArchivo);//Y los contadores se reiniciarán.
+		if (st.wDay != diaActual) {//Si cambia el dÃ­a...
+			diaActual = st.wDay;//El dÃ­a actual serÃ¡ otro...
+			inicializarContadores(tiempoPrograma, nProgramasArchivo);//Y los contadores se reiniciarÃ¡n.
 		}
 		cout << "A dia " << diaActual << " de " << nombreMes[st.wMonth] << endl;
 		for (int i = 0; i < nProgramasArchivo; i++) {
@@ -85,7 +85,7 @@ int main() {
 				}
 				else {
 					horas = tiempoPrograma[i] / (1000 * 60 * 60);
-					//No hay if(horas<24) porque reiniciaremos cada día el contador del tiempo.
+					//No hay if(horas<24) porque reiniciaremos cada dÃ­a el contador del tiempo.
 					minutos = tiempoPrograma[i] / (1000 * 60) - (horas * 60);
 					cout << "El programa " << programasArchivo[i] << " lleva abierto " << horas << " h " << minutos << " min" << endl;
 				}
@@ -108,11 +108,11 @@ void inicializarContadores(unsigned long long int tiempoPrograma[], const size_t
 		tiempoPrograma[i] = 0;
 	}
 }
-/*Añade el programa pasado por parámetro al archivo.
-Retorna true si se ha añadido correctamente, false en caso contrario.
-Se preocupa por no añadir programas ya insertados en el archivo.
-Tampoco añade programas que no existan en windowInfoList. Esto
-es para evitar que se puedan añadir programas inexistentes.
+/*AÃ±ade el programa pasado por parÃ¡metro al archivo.
+Retorna true si se ha aÃ±adido correctamente, false en caso contrario.
+Se preocupa por no aÃ±adir programas ya insertados en el archivo.
+Tampoco aÃ±ade programas que no existan en windowInfoList. Esto
+es para evitar que se puedan aÃ±adir programas inexistentes.
 */
 bool anadirPrograma(string p) {
 	ofstream escritura;
@@ -125,16 +125,16 @@ bool anadirPrograma(string p) {
 			exito = true;
 		}
 	}
-	escritura.close();//Siempre cerraremos los archivos al final del código, aunque no hayamos hecho open de ellos. Esto hace que evitamos errores a la hora de cerrar o no los archivos.
+	escritura.close();//Siempre cerraremos los archivos al final del cÃ³digo, aunque no hayamos hecho open de ellos. Esto hace que evitamos errores a la hora de cerrar o no los archivos.
 	return exito;
 }
-//Elimina el programa pasado por parámetro del fichero. Lo hace guardando todo en strings menos la string pasada.
+//Elimina el programa pasado por parÃ¡metro del fichero. Lo hace guardando todo en strings menos la string pasada.
 void eliminarPrograma(string p) {
 	ifstream archivo;
 	ofstream archivo2;
-	vector<string> programasArchivo;//Guardaré todos los programas menos la string pasada en este vector.
-	string programa;//Programa que se va almacenando temporalmente en cada iteración.
-	bool eliminado = false;//Si se ha eliminado correctamente el archivo, valdrá true.
+	vector<string> programasArchivo;//GuardarÃ© todos los programas menos la string pasada en este vector.
+	string programa;//Programa que se va almacenando temporalmente en cada iteraciÃ³n.
+	bool eliminado = false;//Si se ha eliminado correctamente el archivo, valdrÃ¡ true.
 
 	if (!existeProgramaArchivo(p)) {
 		cout << "Error: no existe el programa que desea eliminar.";
@@ -143,7 +143,7 @@ void eliminarPrograma(string p) {
 		archivo.open("C:/Users/jesus/Documents/C++/ProyectosVisualStudio/Margaret/x64/Debug/listaProgramas.txt");
 		if (archivo.is_open()) {
 			while (archivo.eof() == false) {
-				getline(archivo, programa, '\n');//Lee línea a línea el archivo y lo guarda en programa en cada iteración.
+				getline(archivo, programa, '\n');//Lee lÃ­nea a lÃ­nea el archivo y lo guarda en programa en cada iteraciÃ³n.
 				//if(programa != "") cout<<"Programa:"<<programa<<endl;
 				if (programa.find(p) != string::npos) {
 					//Si lo encontramos no debemos hacer nada.
@@ -170,7 +170,7 @@ void eliminarPrograma(string p) {
 	}
 	archivo2.close();
 }
-//Retorna true si el programa pasado por parámetro existe en el archivo listaProgramas.txt.
+//Retorna true si el programa pasado por parÃ¡metro existe en el archivo listaProgramas.txt.
 bool existeProgramaArchivo(string p) {
 	ifstream lectura;
 	bool existe = false;
@@ -178,7 +178,7 @@ bool existeProgramaArchivo(string p) {
 	lectura.open("C:/Users/jesus/Documents/C++/ProyectosVisualStudio/Margaret/x64/Debug/listaProgramas.txt");
 	if (lectura.is_open()) {
 		while (lectura.eof() == false) {
-			getline(lectura, programa, '\n');//Lee línea a línea el archivo y lo guarda en programa en cada iteración.
+			getline(lectura, programa, '\n');//Lee lÃ­nea a lÃ­nea el archivo y lo guarda en programa en cada iteraciÃ³n.
 			if (programa == p) {
 				existe = true;
 			}
@@ -213,7 +213,7 @@ bool contains(string o, string s) {
 bool contains(vector<WindowInfo> vectorWI, string s) {
 	bool encontrado = false;
 	for (int i = 0; i < vectorWI.size(); i++) {
-		string processNameString(vectorWI[i].processName.begin(), vectorWI[i].processName.end());//Así es como transformamos de wstring a string.
+		string processNameString(vectorWI[i].processName.begin(), vectorWI[i].processName.end());//AsÃ­ es como transformamos de wstring a string.
 		if (processNameString.find(s) != string::npos) {
 			encontrado = true;
 		}
@@ -224,9 +224,9 @@ void menu() {
 	char input[2] = { 0,0 };
 	string programaDeseado;
 	bool encontrado = false;
-	vector<string> programasAnhadidos;//Vector que almacena los programas abiertos al momento de ir a la opción de añadir programas.
-	wstring nombrePrograma;//Variable que irá recogiendo los nombres procesados de cada programa para el usuario.
-	int pos_Exe = 0;//Posición desde donde empezaremos a truncar.
+	vector<string> programasAnhadidos;//Vector que almacena los programas abiertos al momento de ir a la opciÃ³n de aÃ±adir programas.
+	wstring nombrePrograma;//Variable que irÃ¡ recogiendo los nombres procesados de cada programa para el usuario.
+	int pos_Exe = 0;//PosiciÃ³n desde donde empezaremos a truncar.
 	bool arranqueMargaret = false;
 	system("cls");
 	do {
@@ -235,7 +235,7 @@ void menu() {
 		cout << "2. Gestion de programas monitorizados" << endl;
 		cout << "3. Creditos y agradecimientos" << endl;
 		cout<<"4. Salir de la aplicacion"<<endl;
-		cin >> input[0];//Antes lo hacía con getch().
+		cin >> input[0];//Antes lo hacÃ­a con getch().
 		system("cls");
 		switch (input[0]) {
 		case '1': {
@@ -253,10 +253,10 @@ void menu() {
 				cout << "1. Anhadir programa" << endl;
 				cout << "2. Eliminar programa" << endl;
 				cout << "3. Salir al menu principal" << endl;
-				cin >> input[1];//Antes lo hacía con getch().
+				cin >> input[1];//Antes lo hacÃ­a con getch().
 				switch (input[1]) {
 				case '1': {
-					windowInfoList.clear();//Actualizamos windowInfoList para cuando abra la opción.
+					windowInfoList.clear();//Actualizamos windowInfoList para cuando abra la opciÃ³n.
 					EnumWindows(EnumWindowsProc, NULL);
 					system("cls");
 					cout << "Programas abiertos actualmente" << endl;
@@ -344,7 +344,7 @@ void menu() {
 		}
 				break;
 		case '4': {
-			exit(0);//Cerraremos la aplicación.
+			exit(0);//Cerraremos la aplicaciÃ³n.
 		}
 				break;
 		default: {
@@ -394,7 +394,7 @@ vector<string> getProgramasArchivo() {
 			lectura >> programa;
 			programasArchivo.push_back(programa);
 		}
-		programasArchivo.pop_back();//Para eliminar la última string, que es igual en la penúltima posición que en la última.
+		programasArchivo.pop_back();//Para eliminar la Ãºltima string, que es igual en la penÃºltima posiciÃ³n que en la Ãºltima.
 		lectura.close();
 	}
 	return programasArchivo;
@@ -432,11 +432,11 @@ BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam) {
 	}
 	return TRUE;
 }
-//A esta función le pasamos la cadena completa del proceso (C\..\proceso.exe) y nos devolverá el nombre del proceso.
+//A esta funciÃ³n le pasamos la cadena completa del proceso (C\..\proceso.exe) y nos devolverÃ¡ el nombre del proceso.
 wstring nombreProceso(wstring cadenaCompleta) {
-	size_t pos = cadenaCompleta.find_last_of('\\') + 1;/*La posición de la primera letra del proceso será la de justo después
-													 de la última barra. Como es back slash hace falta otra back slash.
-													 Lo ponemos como size_t para evitar pérdida de datos al convertir a int.*/
+	size_t pos = cadenaCompleta.find_last_of('\\') + 1;/*La posiciÃ³n de la primera letra del proceso serÃ¡ la de justo despuÃ©s
+													 de la Ãºltima barra. Como es back slash hace falta otra back slash.
+													 Lo ponemos como size_t para evitar pÃ©rdida de datos al convertir a int.*/
 	bool parar = false;
 	wstring nProceso;
 	while (parar == false) {
