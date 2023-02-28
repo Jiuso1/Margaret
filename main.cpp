@@ -234,6 +234,7 @@ void menu() {
 		cout << "1. Encendido de Margaret" << endl;
 		cout << "2. Gestion de programas monitorizados" << endl;
 		cout << "3. Creditos y agradecimientos" << endl;
+		cout<<"4. Salir de la aplicacion"<<endl;
 		cin >> input[0];//Antes lo hacía con getch().
 		system("cls");
 		switch (input[0]) {
@@ -342,6 +343,10 @@ void menu() {
 			system("cls");
 		}
 				break;
+		case '4': {
+			exit(0);//Cerraremos la aplicación.
+		}
+				break;
 		default: {
 			system("cls");
 			cout << "Error: introduzca un valor valido" << endl;
@@ -429,8 +434,9 @@ BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam) {
 }
 //A esta función le pasamos la cadena completa del proceso (C\..\proceso.exe) y nos devolverá el nombre del proceso.
 wstring nombreProceso(wstring cadenaCompleta) {
-	int pos = cadenaCompleta.find_last_of('\\') + 1;/*La posición de la primera letra del proceso será la de justo después
-													 de la última barra. Como es back slash hace falta otra back slash.*/
+	size_t pos = cadenaCompleta.find_last_of('\\') + 1;/*La posición de la primera letra del proceso será la de justo después
+													 de la última barra. Como es back slash hace falta otra back slash.
+													 Lo ponemos como size_t para evitar pérdida de datos al convertir a int.*/
 	bool parar = false;
 	wstring nProceso;
 	while (parar == false) {
