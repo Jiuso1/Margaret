@@ -37,7 +37,7 @@ VentanaPrincipal::VentanaPrincipal()
                 {12,"diciembre" }
     };
 
-    *fechaCadena = *fechaCadena + "A dia " + transformador->toString(dia) + " de " + mapa.take(mes) + " de " + transformador->toString(anio);
+    *fechaCadena = "A dia " + transformador->toString(dia) + " de " + mapa.take(mes) + " de " + transformador->toString(anio);
 
     fechaLabel->setText(*fechaCadena);
     anadirPr->setText("Añadir programa");
