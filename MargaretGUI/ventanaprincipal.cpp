@@ -8,6 +8,7 @@
 #include <QString>
 #include <QLocale>
 #include <QMap>
+#include <QListView>
 
 VentanaPrincipal::VentanaPrincipal()
 {
@@ -19,6 +20,7 @@ VentanaPrincipal::VentanaPrincipal()
     fechaCadena = new QString;
     transformador = new QLocale;
     //qDebug()<<transformador->toString(12);
+    listaProgramas = new QListView;
 
     int dia = 0,mes = 0,anio = 0;
     fecha->currentDate().getDate(&anio,&mes,&dia);
@@ -37,7 +39,7 @@ VentanaPrincipal::VentanaPrincipal()
                 {12,"diciembre" }
     };
 
-    *fechaCadena = "A dia " + transformador->toString(dia) + " de " + mapa.take(mes) + " de " + transformador->toString(anio);
+    *fechaCadena = "<center><font color='dark blue' size=5 face='trebuchet ms'>A día " + transformador->toString(dia) + " de " + mapa.take(mes) + " de " + transformador->toString(anio) + "</font></center>";
 
     fechaLabel->setText(*fechaCadena);
     anadirPr->setText("Añadir programa");
@@ -46,7 +48,10 @@ VentanaPrincipal::VentanaPrincipal()
             this,SLOT(close()));
     connect(eliminarPr,SIGNAL(clicked()),
             this,SLOT(close()));
+    //Me falta probar cómo añadir a listaProgramas programas, iconos y contadores.
+
     verticalLayout->addWidget(fechaLabel);
+    verticalLayout->addWidget(listaProgramas);
     verticalLayout->addWidget(anadirPr);
     verticalLayout->addWidget(eliminarPr);
     setLayout(verticalLayout);
