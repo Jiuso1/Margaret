@@ -15,6 +15,7 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 set(PROJECT_SOURCES
         main.cpp
         ventanaprincipal.h ventanaprincipal.cpp
+        dialogo_anadirprograma.h dialogo_anadirprograma.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

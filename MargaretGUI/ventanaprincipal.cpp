@@ -1,4 +1,5 @@
 #include "ventanaprincipal.h"
+#include "dialogo_anadirprograma.h"
 #include <QCloseEvent>
 #include <QDebug>
 #include <QPushButton>
@@ -7,8 +8,8 @@
 #include <QDate>
 #include <QString>
 #include <QLocale>
-#include <QMap>
-#include <QListView>
+#include <QHBoxLayout>
+
 
 VentanaPrincipal::VentanaPrincipal()
 {
@@ -20,41 +21,40 @@ VentanaPrincipal::VentanaPrincipal()
     fechaCadena = new QString;
     transformador = new QLocale;
     //qDebug()<<transformador->toString(12);
-    listaProgramas = new QListView;
+    listaProgramas = new QLabel;
+    contadoresProgramas = new QLabel;
+    horizontalLayout = new QHBoxLayout;
 
     int dia = 0,mes = 0,anio = 0;
     fecha->currentDate().getDate(&anio,&mes,&dia);
-    QMap<int,QString> mapa = {//Mapea el número del mes con el nombre.
-                {1,"enero" },
-                {2,"febrero" },
-                {3,"marzo" },
-                {4,"abril" },
-                {5,"mayo" },
-                {6,"junio" },
-                {7,"julio" },
-                {8,"agosto" },
-                {9,"septiembre" },
-                {10,"octubre" },
-                {11,"noviembre" },
-                {12,"diciembre" }
-    };
 
-    *fechaCadena = "<center><font color='dark blue' size=5 face='trebuchet ms'>A día " + transformador->toString(dia) + " de " + mapa.take(mes) + " de " + transformador->toString(anio) + "</font></center>";
+    *fechaCadena = "<center><font color='black' size=5 face=arial><b>" + transformador->toString(dia) + "/" + transformador->toString(mes) + "/" + transformador->toString(anio) + "</b></font></center>";
 
     fechaLabel->setText(*fechaCadena);
-    anadirPr->setText("Añadir programa");
-    eliminarPr->setText("Eliminar programa");
+    anadirPr->setText("&Añadir programa");
+    eliminarPr->setText("&Eliminar programa");
     connect(anadirPr,SIGNAL(clicked()),
-            this,SLOT(close()));
+            this,SLOT(anadirPrograma()));
     connect(eliminarPr,SIGNAL(clicked()),
             this,SLOT(close()));
-    //Me falta probar cómo añadir a listaProgramas programas, iconos y contadores.
+
+    //No usaré QListView. Usaré QLabel.
+    listaProgramas->setText("Minecraft <br> TikTok");
+    contadoresProgramas->setText("12 horas <br> 3 horas");
+
 
     verticalLayout->addWidget(fechaLabel);
-    verticalLayout->addWidget(listaProgramas);
+    horizontalLayout->addWidget(listaProgramas);
+    horizontalLayout->addSpacing(50);
+    horizontalLayout->addWidget(contadoresProgramas);
+    verticalLayout->addLayout(horizontalLayout);
     verticalLayout->addWidget(anadirPr);
     verticalLayout->addWidget(eliminarPr);
     setLayout(verticalLayout);
+}
+//Abriremos la ventana de añadir uno o varios programas que se encuentren abiertos
+void VentanaPrincipal::anadirPrograma(){
+
 }
 void VentanaPrincipal::closeEvent(QCloseEvent *event){
     qDebug()<<"Has salido de la aplicación";
