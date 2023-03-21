@@ -1,8 +1,7 @@
 #ifndef VENTANAPRINCIPAL_H
 #define VENTANAPRINCIPAL_H
 
-//#include <QMainWindow>//Vamos a usar QDialog porque es el que nos funciona.
-#include <QDialog>
+#include <QMainWindow>
 #include "dialogo_anadirprograma.h"
 
 class QCloseEvent;
@@ -13,9 +12,9 @@ class QHBoxLayout;
 class QDate;
 class QLocale;
 class QString;
+class QWidget;
 
-
-class VentanaPrincipal : public QDialog
+class VentanaPrincipal : public QMainWindow
 {
     Q_OBJECT
 
@@ -40,6 +39,7 @@ private:
     dialogo_anadirprograma *dialogoAdd;
     QHBoxLayout *horizontalLayout;//Layout en el que incluiremos la lista de programas junto con sus respectivos contadores.
     QLabel *contadoresProgramas;//Almacenará el conjunto de contadores asociados a listaProgramas.
+    QWidget *centralWidget;//Este widget lo pondremos en el centro de nuestra ventana QMainWindow.
 };
 
 #endif // VENTANAPRINCIPAL_H

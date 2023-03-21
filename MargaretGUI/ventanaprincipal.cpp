@@ -9,6 +9,7 @@
 #include <QString>
 #include <QLocale>
 #include <QHBoxLayout>
+#include <QWidget>
 
 
 VentanaPrincipal::VentanaPrincipal()
@@ -24,6 +25,7 @@ VentanaPrincipal::VentanaPrincipal()
     listaProgramas = new QLabel;
     contadoresProgramas = new QLabel;
     horizontalLayout = new QHBoxLayout;
+    centralWidget = new QWidget;
 
     int dia = 0,mes = 0,anio = 0;
     fecha->currentDate().getDate(&anio,&mes,&dia);
@@ -38,7 +40,7 @@ VentanaPrincipal::VentanaPrincipal()
     connect(eliminarPr,SIGNAL(clicked()),
             this,SLOT(close()));
 
-    //No usaré QListView. Usaré QLabel.
+
     listaProgramas->setText("Minecraft <br> TikTok");
     contadoresProgramas->setText("12 horas <br> 3 horas");
 
@@ -49,8 +51,11 @@ VentanaPrincipal::VentanaPrincipal()
     horizontalLayout->addWidget(contadoresProgramas);
     verticalLayout->addLayout(horizontalLayout);
     verticalLayout->addWidget(anadirPr);
-    verticalLayout->addWidget(eliminarPr);
-    setLayout(verticalLayout);
+    verticalLayout->addWidget(eliminarPr); //Esto funciona con QDialog, no con QMainWindow.
+
+    centralWidget->setLayout(verticalLayout);
+    setCentralWidget(centralWidget);
+    setWindowTitle("Margaret");
 }
 //Abriremos la ventana de añadir uno o varios programas que se encuentren abiertos
 void VentanaPrincipal::anadirPrograma(){
