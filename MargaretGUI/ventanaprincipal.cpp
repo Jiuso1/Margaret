@@ -2,7 +2,6 @@
 #include "dialogo_anadirprograma.h"
 #include <QCloseEvent>
 #include <QDebug>
-#include <QPushButton>
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QDate>
@@ -10,14 +9,14 @@
 #include <QLocale>
 #include <QHBoxLayout>
 #include <QWidget>
-
+#include <QAction>
+#include <QApplication>
+#include <QMenuBar>
 
 VentanaPrincipal::VentanaPrincipal()
 {
     verticalLayout = new QVBoxLayout;
     fechaLabel = new QLabel;
-    anadirPr = new QPushButton;
-    eliminarPr = new QPushButton;
     fecha = new QDate;
     fechaCadena = new QString;
     transformador = new QLocale;
@@ -31,27 +30,20 @@ VentanaPrincipal::VentanaPrincipal()
     fecha->currentDate().getDate(&anio,&mes,&dia);
 
     *fechaCadena = "<center><font color='black' size=5 face=arial><b>" + transformador->toString(dia) + "/" + transformador->toString(mes) + "/" + transformador->toString(anio) + "</b></font></center>";
-
     fechaLabel->setText(*fechaCadena);
-    anadirPr->setText("&Añadir programa");
-    eliminarPr->setText("&Eliminar programa");
-    connect(anadirPr,SIGNAL(clicked()),
-            this,SLOT(anadirPrograma()));
-    connect(eliminarPr,SIGNAL(clicked()),
-            this,SLOT(close()));
-
-
-    listaProgramas->setText("Minecraft <br> TikTok");
-    contadoresProgramas->setText("12 horas <br> 3 horas");
+    listaProgramas->setText("Chrome <br> TikTok");
+    contadoresProgramas->setText("3 h 21 min <br> 29 min 40 s");
 
 
     verticalLayout->addWidget(fechaLabel);
     horizontalLayout->addWidget(listaProgramas);
-    horizontalLayout->addSpacing(50);
+    horizontalLayout->addSpacing(100);//Lo ponemos justo en medio de listaProgramas y contadoresProgramas.
     horizontalLayout->addWidget(contadoresProgramas);
     verticalLayout->addLayout(horizontalLayout);
-    verticalLayout->addWidget(anadirPr);
-    verticalLayout->addWidget(eliminarPr); //Esto funciona con QDialog, no con QMainWindow.
+    horizontalLayout->setAlignment(Qt::AlignHCenter);
+
+    createActions();
+    createMenus();
 
     centralWidget->setLayout(verticalLayout);
     setCentralWidget(centralWidget);
@@ -61,6 +53,25 @@ VentanaPrincipal::VentanaPrincipal()
 void VentanaPrincipal::anadirPrograma(){
 
 }
+
+void VentanaPrincipal::createActions(){
+    anadirProgramaAction = new QAction("&Añadir programa",this);
+    eliminarProgramaAction = new QAction("&Eliminar programa",this);
+    aboutQtAction = new QAction("Acerca de &Qt",this);
+    ayudaMargaretAction = new QAction("Documentación de &Margaret",this);
+
+    connect(aboutQtAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+}
+
+void VentanaPrincipal::createMenus(){
+    programasMenu = menuBar()->addMenu(tr("&Programas"));
+    programasMenu->addAction(anadirProgramaAction);
+    programasMenu->addAction(eliminarProgramaAction);
+    ayudaMenu = menuBar()->addMenu(tr("&Ayuda"));
+    ayudaMenu->addAction(ayudaMargaretAction);
+    ayudaMenu->addAction(aboutQtAction);
+}
+
 void VentanaPrincipal::closeEvent(QCloseEvent *event){
     qDebug()<<"Has salido de la aplicación";
     qDebug()<<"Yujuuu";

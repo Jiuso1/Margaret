@@ -16,6 +16,7 @@ set(PROJECT_SOURCES
         main.cpp
         ventanaprincipal.h ventanaprincipal.cpp
         dialogo_anadirprograma.h dialogo_anadirprograma.cpp
+        monitor.h monitor.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

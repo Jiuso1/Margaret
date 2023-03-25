@@ -3,16 +3,18 @@
 
 #include <QMainWindow>
 #include "dialogo_anadirprograma.h"
+#include "monitor.h"
 
 class QCloseEvent;
 class QLabel;
-class QPushButton;
 class QVBoxLayout;
 class QHBoxLayout;
 class QDate;
 class QLocale;
 class QString;
 class QWidget;
+class QAction;
+class QMenu;
 
 class VentanaPrincipal : public QMainWindow
 {
@@ -20,7 +22,9 @@ class VentanaPrincipal : public QMainWindow
 
 public:
     VentanaPrincipal();
-
+    void createActions();
+    void createToolBars();
+    void createMenus();
 protected:
     void closeEvent(QCloseEvent *event);
 
@@ -28,9 +32,7 @@ private slots:
     void anadirPrograma();//Se llamará a este slot cuando pulsemos en el botón anadirPr.
 
 private:
-    QLabel *fechaLabel;//Label que almacena la fecha. Formato: "A día "<<dia<<" de "<<mes.
-    QPushButton *anadirPr;//Botón que abre el diálogo para añadir un programa.
-    QPushButton *eliminarPr;//Botón que abre el diálogo para eliminar un programa.
+    QLabel *fechaLabel;//Label que almacena la fecha.
     QVBoxLayout *verticalLayout;//Layout en el que incluiremos los diferentes widgets.
     QDate *fecha;//Con este objeto obtendremos la fecha actual del sistema usando el método currentDate().
     QLocale *transformador;//Nos permitirá pasar de int a QString.
@@ -39,7 +41,14 @@ private:
     dialogo_anadirprograma *dialogoAdd;
     QHBoxLayout *horizontalLayout;//Layout en el que incluiremos la lista de programas junto con sus respectivos contadores.
     QLabel *contadoresProgramas;//Almacenará el conjunto de contadores asociados a listaProgramas.
-    QWidget *centralWidget;//Este widget lo pondremos en el centro de nuestra ventana QMainWindow.
+    QWidget *centralWidget;//Este widget lo pondremos en el centro de nuestra ventana QMainWindow. Este contendrá el layout principal.
+    QAction *anadirProgramaAction;//Este QAction será añadido a una QToolBar. Será responsable de abrir la ventana diálogo encargada de solicitar la información del nuevo programa en la lista.
+    QAction *eliminarProgramaAction;//Homólogo al QAction de arriba, pero para abrir la ventana diálogo encargada de eliminar el programa deseado.
+    QAction *aboutQtAction;//QAction encargado de abrir la información sobre la versión de Qt empleada.
+    QAction *ayudaMargaretAction;
+    QMenu *programasMenu;
+    QMenu *ayudaMenu;
+    Monitor monitorProgramas;
 };
 
 #endif // VENTANAPRINCIPAL_H
