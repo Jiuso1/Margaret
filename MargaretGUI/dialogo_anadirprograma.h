@@ -5,18 +5,24 @@
 
 class QLabel;
 class QPushButton;
+class QVBoxLayout;
+class QHBoxLayout;
+class QCheckBox;
+class QGroupBox;
 
 class dialogo_anadirprograma : public QDialog
 {
     Q_OBJECT
 
 public:
-    dialogo_anadirprograma();
+    dialogo_anadirprograma(QWidget *parent = nullptr);
 
 private:
-    QLabel *anadirLabel;
     QPushButton *aceptarButton;
     QPushButton *cancelarButton;
+    QVBoxLayout *verticalLayout;
+    QHBoxLayout *horizontalLayout;
+    QGroupBox *programasBox;
 };
 
 #endif // DIALOGO_ANADIRPROGRAMA_H

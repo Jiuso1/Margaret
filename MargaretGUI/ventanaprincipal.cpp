@@ -25,6 +25,7 @@ VentanaPrincipal::VentanaPrincipal()
     contadoresProgramas = new QLabel;
     horizontalLayout = new QHBoxLayout;
     centralWidget = new QWidget;
+    dialogoAdd = nullptr;//Importantísimo inicializarlo a nullptr.
 
     int dia = 0,mes = 0,anio = 0;
     fecha->currentDate().getDate(&anio,&mes,&dia);
@@ -49,9 +50,15 @@ VentanaPrincipal::VentanaPrincipal()
     setCentralWidget(centralWidget);
     setWindowTitle("Margaret");
 }
-//Abriremos la ventana de añadir uno o varios programas que se encuentren abiertos
+//Abriremos el diálogo de añadir programas.
 void VentanaPrincipal::anadirPrograma(){
-
+    if(!dialogoAdd){
+        //qDebug("No existe el dialogo");
+        dialogoAdd = new dialogo_anadirprograma(this);  //Solo reservamos memoria si no habíamos reservado antes. Si ya hemos reservado, no reservamos más y así no tendremos un posible memory leak.
+    }else{
+        //qDebug("Ya sí existe el diálogo");
+    }
+    dialogoAdd->show();
 }
 
 void VentanaPrincipal::createActions(){
@@ -60,6 +67,7 @@ void VentanaPrincipal::createActions(){
     aboutQtAction = new QAction("Acerca de &Qt",this);
     ayudaMargaretAction = new QAction("Documentación de &Margaret",this);
 
+    connect(anadirProgramaAction,SIGNAL(triggered()),this,SLOT(anadirPrograma()));
     connect(aboutQtAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 }
 

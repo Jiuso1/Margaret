@@ -2,8 +2,8 @@
 #define VENTANAPRINCIPAL_H
 
 #include <QMainWindow>
-#include "dialogo_anadirprograma.h"
 #include "monitor.h"
+#include "dialogo_anadirprograma.h"
 
 class QCloseEvent;
 class QLabel;
@@ -29,7 +29,7 @@ protected:
     void closeEvent(QCloseEvent *event);
 
 private slots:
-    void anadirPrograma();//Se llamará a este slot cuando pulsemos en el botón anadirPr.
+    void anadirPrograma();//Se llamará a este slot cuando pulsemos en el botón indicado.
 
 private:
     QLabel *fechaLabel;//Label que almacena la fecha.
@@ -38,7 +38,6 @@ private:
     QLocale *transformador;//Nos permitirá pasar de int a QString.
     QString *fechaCadena;//Almacenará la cadena que le pasaremos a fechaLabel para que la muestre.
     QLabel *listaProgramas;//Almacenará el conjunto de programas a monitorizar junto con sus contadores respectivos y junto con el icono de los programas. Todo ello se realizará con el formato HTML.
-    dialogo_anadirprograma *dialogoAdd;
     QHBoxLayout *horizontalLayout;//Layout en el que incluiremos la lista de programas junto con sus respectivos contadores.
     QLabel *contadoresProgramas;//Almacenará el conjunto de contadores asociados a listaProgramas.
     QWidget *centralWidget;//Este widget lo pondremos en el centro de nuestra ventana QMainWindow. Este contendrá el layout principal.
@@ -49,6 +48,8 @@ private:
     QMenu *programasMenu;
     QMenu *ayudaMenu;
     Monitor monitorProgramas;
+    dialogo_anadirprograma *dialogoAdd;
+    Monitor *monitor;//Es el encargado de hablar con el sistema operativo y de calcular los tiempos.
 };
 
 #endif // VENTANAPRINCIPAL_H
