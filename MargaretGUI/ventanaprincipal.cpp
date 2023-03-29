@@ -57,6 +57,7 @@ void VentanaPrincipal::anadirPrograma(){
         dialogoAdd = new dialogo_anadirprograma(this);  //Solo reservamos memoria si no habíamos reservado antes. Si ya hemos reservado, no reservamos más y así no tendremos un posible memory leak.
     }else{
         //qDebug("Ya sí existe el diálogo");
+        dialogoAdd->actualizarProgramasAbiertos();
     }
     dialogoAdd->show();
 }

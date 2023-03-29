@@ -16,6 +16,7 @@ class dialogo_anadirprograma : public QDialog
 
 public:
     dialogo_anadirprograma(QWidget *parent = nullptr);
+    void actualizarProgramasAbiertos();
 
 private:
     QPushButton *aceptarButton;
@@ -23,6 +24,10 @@ private:
     QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayout;
     QGroupBox *programasBox;
+    QVBoxLayout *boxLayout;
+
+private slots:
+
 };
 
 #endif // DIALOGO_ANADIRPROGRAMA_H

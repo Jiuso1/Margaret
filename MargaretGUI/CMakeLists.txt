@@ -18,6 +18,7 @@ set(PROJECT_SOURCES
         dialogo_anadirprograma.h dialogo_anadirprograma.cpp
         monitor.h monitor.cpp
         windowinfo.h
+        motor.cpp motor.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
