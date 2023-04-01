@@ -2,6 +2,7 @@
 #define DIALOGO_ANADIRPROGRAMA_H
 
 #include <QDialog>
+#include <QCheckBox>
 
 class QLabel;
 class QPushButton;
@@ -25,9 +26,12 @@ private:
     QHBoxLayout *horizontalLayout;
     QGroupBox *programasBox;
     QVBoxLayout *boxLayout;
+    QCheckBox *check[50];
 
 private slots:
 
+protected:
+    void closeEvent(QCloseEvent *event);
 };
 
 #endif // DIALOGO_ANADIRPROGRAMA_H

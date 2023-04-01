@@ -6,7 +6,7 @@
 #include <windows.h>
 #include <vector>
 
-void escribirPtos();
+void clear_windowInfoList();
 BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam);
 std::vector<WindowInfo> get_windowInfoList();
 std::wstring nombreProceso(std::wstring cadenaCompleta);

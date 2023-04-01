@@ -6,9 +6,8 @@
 
 std::vector<WindowInfo> windowInfoList;//Aquí nos crearemos windowInfoList, que almacenará en todo momento los procesos con ventanas abiertas.
 
-void escribirPtos(){
-    windowInfoList.clear();//Limpiamos windowInfoList, para actualizar los datos.
-    qDebug()<<"XD";
+void clear_windowInfoList(){
+    windowInfoList.clear();
 }
 BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam) {
     WindowInfo info;
