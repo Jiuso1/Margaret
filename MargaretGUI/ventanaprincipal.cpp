@@ -52,13 +52,19 @@ VentanaPrincipal::VentanaPrincipal()
 }
 //Abriremos el diálogo de añadir programas.
 void VentanaPrincipal::anadirPrograma(){
-    if(!dialogoAdd){
+    /*if(!dialogoAdd){
         //qDebug("No existe el dialogo");
         dialogoAdd = new dialogo_anadirprograma(this);  //Solo reservamos memoria si no habíamos reservado antes. Si ya hemos reservado, no reservamos más y así no tendremos un posible memory leak.
     }else{
         //qDebug("Ya sí existe el diálogo");
         dialogoAdd->actualizarProgramasAbiertos();
-    }
+    }*/
+    /*
+    Ya podemos reservar memoria siempre sin preocuparnos, cuando cerramos
+    el diálogo este mismo es destruido. Esto es gracias a setAttribute(...)
+    en el constructor de dialogo_anadirprograma.cpp.
+    */
+    dialogoAdd = new dialogo_anadirprograma(this);
     dialogoAdd->show();
 }
 
@@ -66,7 +72,7 @@ void VentanaPrincipal::createActions(){
     anadirProgramaAction = new QAction("&Añadir programa",this);
     eliminarProgramaAction = new QAction("&Eliminar programa",this);
     aboutQtAction = new QAction("Acerca de &Qt",this);
-    ayudaMargaretAction = new QAction("Documentación de &Margaret",this);
+    ayudaMargaretAction = new QAction("&Documentación de Margaret",this);
 
     connect(anadirProgramaAction,SIGNAL(triggered()),this,SLOT(anadirPrograma()));
     connect(aboutQtAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));

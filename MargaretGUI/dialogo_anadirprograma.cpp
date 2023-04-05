@@ -12,6 +12,7 @@
 #include <string>
 #include <windows.h>
 #include <QString>
+#include <QFile>
 
 dialogo_anadirprograma::dialogo_anadirprograma(QWidget *parent) : QDialog(parent)
 {
@@ -37,6 +38,11 @@ dialogo_anadirprograma::dialogo_anadirprograma(QWidget *parent) : QDialog(parent
     verticalLayout->addLayout(horizontalLayout);
 
     setLayout(verticalLayout);
+
+    setAttribute(Qt::WA_DeleteOnClose);//Al ponerle este atributo al diálogo, cuando se cierre se destruirá.
+
+    connect(aceptarButton,SIGNAL(clicked()),this,SLOT(aceptar()));
+    connect(cancelarButton,SIGNAL(clicked()),this,SLOT(close()));
 
     //qDebug()<<get_windowInfoList()[1].processName;
 
@@ -84,7 +90,7 @@ void dialogo_anadirprograma::actualizarProgramasAbiertos(){
 
     //qDebug()<<windowInfoList.size();
 
-    int nProgramas = windowInfoList.size();
+    nProgramas = windowInfoList.size();
 
     QString nombreBoton[nProgramas];//Este array almacenará los nombres que se les asignarán a los botones checkables del diálogo.
     std::wstring programa;//En cada iteración guardaremos a partir de la ruta completa que windowInfoList[i].processName nos ofrece, el nombre del programa usando la función nombreProceso de motor.h.
@@ -114,5 +120,54 @@ void dialogo_anadirprograma::actualizarProgramasAbiertos(){
     }
 }
 void dialogo_anadirprograma::closeEvent(QCloseEvent *event){
-    qDebug()<<"Debemos eliminar los widgets";
+    //qDebug()<<"Debemos eliminar los widgets";
+}
+void dialogo_anadirprograma::aceptar(){
+    QFile archivoLectura("programas.dat");
+    if(!archivoLectura.open(QIODevice::ReadOnly)){
+        qDebug()<<"No se pudo abrir el archivo";
+        qDebug()<<qPrintable(archivoLectura.errorString());
+        //Quitamos el return por si no existe.
+    }
+    /*
+    En el array programa almacenaremos los programas que ya se encontraban
+    antes en el fichero, y también almacenaremos los nuevos programas a añadir
+    al fichero.
+    */
+    QString programa[50];
+    QDataStream entrada(&archivoLectura);
+    entrada.setVersion(QDataStream::Qt_6_4);
+    qDebug()<<"----------------------------------------------";
+    int i = 0;//Para iterar.
+    bool cadenaVacia = false;//Si encontramos una cadena vacía, valdrá  true.
+    while(i < 50 && !cadenaVacia){
+        entrada>>programa[i];
+        if(programa[i] == ""){
+            cadenaVacia = true;
+        }else{
+            i++;
+        }
+    }
+    qDebug()<<i;
+    /*for(int j = 0;j < i;i++){
+        qDebug()<<programa[j];
+    }*/
+    qDebug()<<"----------------------------------------------";
+    archivoLectura.close();
+
+    QFile archivoEscritura("programas.dat");
+    if(!archivoEscritura.open(QIODevice::WriteOnly)){
+        qDebug()<<"No se pudo abrir el archivo";
+        qDebug()<<qPrintable(archivoEscritura.errorString());
+        return;
+    }
+    QDataStream salida(&archivoEscritura);
+    salida.setVersion(QDataStream::Qt_6_4);
+    for(int i = 0;i < nProgramas;i++){
+        if(check[i]->isChecked()){
+            salida<<check[i]->text();
+        }
+    }
+    archivoEscritura.close();
+    close();
 }

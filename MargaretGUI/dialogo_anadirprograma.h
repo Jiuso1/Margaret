@@ -27,9 +27,10 @@ private:
     QGroupBox *programasBox;
     QVBoxLayout *boxLayout;
     QCheckBox *check[50];
+    int nProgramas;//Número de programas que se mostrarán en los checkbox.
 
 private slots:
-
+    void aceptar();
 protected:
     void closeEvent(QCloseEvent *event);
 };
