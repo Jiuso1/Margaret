@@ -28,6 +28,7 @@ private:
     QVBoxLayout *boxLayout;
     QCheckBox *check[50];
     int nProgramas;//Número de programas que se mostrarán en los checkbox.
+    int nMaxProgramas;
 
 private slots:
     void aceptar();

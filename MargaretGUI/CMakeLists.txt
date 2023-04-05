@@ -19,6 +19,7 @@ set(PROJECT_SOURCES
         monitor.h monitor.cpp
         windowinfo.h
         motor.cpp motor.h
+        dialogo_eliminarprograma.h dialogo_eliminarprograma.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

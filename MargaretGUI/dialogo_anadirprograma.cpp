@@ -16,14 +16,15 @@
 
 dialogo_anadirprograma::dialogo_anadirprograma(QWidget *parent) : QDialog(parent)
 {
-    //Importantísimo inicializar siempre las variables, por estúpido que parezca.
-    aceptarButton = new QPushButton(tr("Aceptar"));
-    cancelarButton = new QPushButton(tr("Cancelar"));
+    //Importantísimo inicializar siempre las variables.
+    aceptarButton = new QPushButton(tr("&Aceptar"));
+    cancelarButton = new QPushButton(tr("&Cancelar"));
     verticalLayout = new QVBoxLayout;
     horizontalLayout = new QHBoxLayout;
     programasBox = new QGroupBox;
     boxLayout = new QVBoxLayout;
-    for(int i = 0;i < 50;i++){
+    nMaxProgramas = 50;//Pongamos 50 por ejemplo.
+    for(int i = 0;i < nMaxProgramas;i++){
         check[i] = nullptr;//Importantísimo inicializar los punteros a nullptr, sino no estarán inicializados y se ejecutarán métodos sin tener memoria reservada a pesar del control if(puntero == nullptr).
     }
 
@@ -112,7 +113,7 @@ void dialogo_anadirprograma::actualizarProgramasAbiertos(){
             check[i]->setText(nombreBoton[i]);
         }
     }
-    for(int i = nProgramas;i < 50;i++){//Este for es para eliminar el resto de checkboxes que queden fuera del nº de programas actual.
+    for(int i = nProgramas;i < nMaxProgramas;i++){//Este for es para eliminar el resto de checkboxes que queden fuera del nº de programas actual.
         if(check[i] != nullptr){//Si el checkbox tiene memoria reservada (si no la tiene no tenemos que hacer nada).
             check[i]->hide();//Lo ocultamos. Si no lo ocultamos seguirá apareciendo en el diálogo, a pesar de eliminarlo del layout (se vería feo además).
             boxLayout->removeWidget(check[i]);//Lo eliminamos del layout.
@@ -134,24 +135,28 @@ void dialogo_anadirprograma::aceptar(){
     antes en el fichero, y también almacenaremos los nuevos programas a añadir
     al fichero.
     */
-    QString programa[50];
+    //QString programa[nMaxProgramas];
+    QList<QString> programa;
+    QString pr;
     QDataStream entrada(&archivoLectura);
     entrada.setVersion(QDataStream::Qt_6_4);
     qDebug()<<"----------------------------------------------";
     int i = 0;//Para iterar.
     bool cadenaVacia = false;//Si encontramos una cadena vacía, valdrá  true.
-    while(i < 50 && !cadenaVacia){
-        entrada>>programa[i];
-        if(programa[i] == ""){
+    while(i < nMaxProgramas && !cadenaVacia){
+        //entrada>>programa[i];
+        entrada>>pr;
+        if(/*programa[i]*/pr == ""){
             cadenaVacia = true;
         }else{
+            programa.push_back(pr);
             i++;
         }
     }
-    qDebug()<<i;
-    /*for(int j = 0;j < i;i++){
+    //j contendrá el índice de la primera cadena vacía.
+    for(int j = 0;j < i;j++){
         qDebug()<<programa[j];
-    }*/
+    }
     qDebug()<<"----------------------------------------------";
     archivoLectura.close();
 
@@ -164,9 +169,14 @@ void dialogo_anadirprograma::aceptar(){
     QDataStream salida(&archivoEscritura);
     salida.setVersion(QDataStream::Qt_6_4);
     for(int i = 0;i < nProgramas;i++){
-        if(check[i]->isChecked()){
-            salida<<check[i]->text();
+        if(check[i]->isChecked() && !programa.contains(check[i]->text())){
+            //Si el check está checkado y no está en los programas anteriores...
+            //salida<<check[i]->text();
+            programa.push_back(check[i]->text());
         }
+    }
+    for(int i = 0;i < programa.size();i++){
+        salida<<programa[i];
     }
     archivoEscritura.close();
     close();
