@@ -24,6 +24,7 @@ dialogo_eliminarprograma::dialogo_eliminarprograma(QWidget *parent) : QDialog(pa
     programasBox = new QGroupBox;
     boxLayout = new QVBoxLayout;
     nMaxProgramas = 50;//Pongamos 50 por ejemplo.
+    nProgramas = 0;//Inicializamos a 0 nProgramas.
     for(int i = 0;i < nMaxProgramas;i++){
         check[i] = nullptr;//Importantísimo inicializar los punteros a nullptr, sino no estarán inicializados y se ejecutarán métodos sin tener memoria reservada a pesar del control if(puntero == nullptr).
     }
@@ -46,7 +47,6 @@ dialogo_eliminarprograma::dialogo_eliminarprograma(QWidget *parent) : QDialog(pa
     connect(cancelarButton,SIGNAL(clicked()),this,SLOT(close()));
 }
 void dialogo_eliminarprograma::actualizarProgramasArchivo(){
-    int nProgramas = 0;
     int i = 0;
     bool cadenaVacia = false;//Si encontramos una cadena vacía, valdrá true.
     QString pr;
@@ -94,29 +94,38 @@ void dialogo_eliminarprograma::actualizarProgramasArchivo(){
     }
 }
 void dialogo_eliminarprograma::aceptar(){
+/*
+programa es una lista de QString. Este almacenará los programas que se
+sobreescribirán en el archivo (es decir, todos los programas que permanecerán tras
+eliminar los programas deseados).
+*/
     QList<QString> programa;
-    QFile archivoEscritura("programas.dat");
-    /*if(!archivoEscritura.open(QIODevice::WriteOnly)){
-        qDebug()<<"No se pudo abrir el archivo";
-        qDebug()<<qPrintable(archivoEscritura.errorString());
-        return;
-    }*/
-    QDataStream salida(&archivoEscritura);
-    salida.setVersion(QDataStream::Qt_6_4);
+
     for(int i = 0;i < nProgramas;i++){
-        if(check[i]->isChecked() && !programa.contains(check[i]->text())){
-            //Si el check está checkado y no está en los programas anteriores...
+        if(!check[i]->isChecked()){//Si no está checkado lo añadimos al archivo.
             programa.push_back(check[i]->text());
         }
     }
 
-    qDebug()<<"0";
+    qDebug()<<0;
     for(int i = 0;i < programa.size();i++){
         qDebug()<<programa[i];
     }
-    qDebug()<<"0";
+    qDebug()<<0;
+
+    QFile archivoEscritura("programas.dat");
+    if(!archivoEscritura.open(QIODevice::WriteOnly)){
+        qDebug()<<"No se pudo abrir el archivo";
+        qDebug()<<qPrintable(archivoEscritura.errorString());
+        return;
+    }
+    QDataStream salida(&archivoEscritura);
+    salida.setVersion(QDataStream::Qt_6_4);
+
+    for(int i = 0;i < programa.size();i++){
+        salida<<programa[i];
+    }
 
     archivoEscritura.close();
     close();
 }
-
