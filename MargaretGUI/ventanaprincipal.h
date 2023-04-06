@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "monitor.h"
 #include "dialogo_anadirprograma.h"
+#include "dialogo_eliminarprograma.h"
 
 class QCloseEvent;
 class QLabel;
@@ -30,6 +31,7 @@ protected:
 
 private slots:
     void anadirPrograma();//Se llamará a este slot cuando pulsemos en el botón indicado.
+    void eliminarPrograma();//Abrirá el diálogo de eliminar programa.
 
 private:
     QLabel *fechaLabel;//Label que almacena la fecha.
@@ -49,6 +51,7 @@ private:
     QMenu *ayudaMenu;
     Monitor monitorProgramas;
     dialogo_anadirprograma *dialogoAdd;
+    dialogo_eliminarprograma *dialogoRemove;
     Monitor *monitor;//Es el encargado de hablar con el sistema operativo y de calcular los tiempos.
 };
 

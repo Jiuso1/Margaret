@@ -67,7 +67,10 @@ void VentanaPrincipal::anadirPrograma(){
     dialogoAdd = new dialogo_anadirprograma(this);
     dialogoAdd->show();
 }
-
+void VentanaPrincipal::eliminarPrograma(){
+    dialogoRemove = new dialogo_eliminarprograma(this);
+    dialogoRemove->show();
+}
 void VentanaPrincipal::createActions(){
     anadirProgramaAction = new QAction("&Añadir programa",this);
     eliminarProgramaAction = new QAction("&Eliminar programa",this);
@@ -75,6 +78,7 @@ void VentanaPrincipal::createActions(){
     ayudaMargaretAction = new QAction("&Documentación de Margaret",this);
 
     connect(anadirProgramaAction,SIGNAL(triggered()),this,SLOT(anadirPrograma()));
+    connect(eliminarProgramaAction,SIGNAL(triggered()),this,SLOT(eliminarPrograma()));
     connect(aboutQtAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 }
 

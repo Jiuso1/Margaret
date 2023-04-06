@@ -30,7 +30,7 @@ dialogo_anadirprograma::dialogo_anadirprograma(QWidget *parent) : QDialog(parent
 
     actualizarProgramasAbiertos();
 
-    programasBox->setTitle(tr("Elija los programas que desee monitorizar"));
+    programasBox->setTitle(tr("Seleccione los programas que desee monitorizar"));
     programasBox->setLayout(boxLayout);
 
     horizontalLayout->addWidget(cancelarButton);
@@ -120,9 +120,6 @@ void dialogo_anadirprograma::actualizarProgramasAbiertos(){
         }
     }
 }
-void dialogo_anadirprograma::closeEvent(QCloseEvent *event){
-    //qDebug()<<"Debemos eliminar los widgets";
-}
 void dialogo_anadirprograma::aceptar(){
     QFile archivoLectura("programas.dat");
     if(!archivoLectura.open(QIODevice::ReadOnly)){
@@ -142,7 +139,7 @@ void dialogo_anadirprograma::aceptar(){
     entrada.setVersion(QDataStream::Qt_6_4);
     qDebug()<<"----------------------------------------------";
     int i = 0;//Para iterar.
-    bool cadenaVacia = false;//Si encontramos una cadena vacía, valdrá  true.
+    bool cadenaVacia = false;//Si encontramos una cadena vacía, valdrá true.
     while(i < nMaxProgramas && !cadenaVacia){
         //entrada>>programa[i];
         entrada>>pr;

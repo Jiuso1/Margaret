@@ -32,8 +32,6 @@ private:
 
 private slots:
     void aceptar();
-protected:
-    void closeEvent(QCloseEvent *event);
 };
 
 #endif // DIALOGO_ANADIRPROGRAMA_H
