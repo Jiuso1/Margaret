@@ -107,12 +107,6 @@ eliminar los programas deseados).
         }
     }
 
-    qDebug()<<0;
-    for(int i = 0;i < programa.size();i++){
-        qDebug()<<programa[i];
-    }
-    qDebug()<<0;
-
     QFile archivoEscritura("programas.dat");
     if(!archivoEscritura.open(QIODevice::WriteOnly)){
         qDebug()<<"No se pudo abrir el archivo";

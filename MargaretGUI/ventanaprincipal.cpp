@@ -49,6 +49,9 @@ VentanaPrincipal::VentanaPrincipal()
     centralWidget->setLayout(verticalLayout);
     setCentralWidget(centralWidget);
     setWindowTitle("Margaret");
+
+    monitor = new Monitor(this);
+    monitor->start();
 }
 //Abriremos el diálogo de añadir programas.
 void VentanaPrincipal::anadirPrograma(){
@@ -91,7 +94,14 @@ void VentanaPrincipal::createMenus(){
     ayudaMenu->addAction(aboutQtAction);
 }
 
+void VentanaPrincipal::setlistaProgramas(QString lProgramas){
+    listaProgramas->setText(lProgramas);//Le asigna a listaProgramas la cadena lProgramas.
+}
+
+void VentanaPrincipal::setcontadoresProgramas(QString cProgramas){
+    contadoresProgramas->setText(cProgramas);
+}
+
 void VentanaPrincipal::closeEvent(QCloseEvent *event){
-    qDebug()<<"Has salido de la aplicación";
-    qDebug()<<"Yujuuu";
+
 }

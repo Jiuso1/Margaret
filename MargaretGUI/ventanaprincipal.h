@@ -26,6 +26,8 @@ public:
     void createActions();
     void createToolBars();
     void createMenus();
+    void setlistaProgramas(QString lProgramas);//Lo usaremos en Monitor.
+    void setcontadoresProgramas(QString cProgramas);
 protected:
     void closeEvent(QCloseEvent *event);
 
