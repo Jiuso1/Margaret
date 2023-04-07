@@ -137,7 +137,7 @@ void dialogo_anadirprograma::aceptar(){
     QString pr;
     QDataStream entrada(&archivoLectura);
     entrada.setVersion(QDataStream::Qt_6_4);
-    qDebug()<<"----------------------------------------------";
+
     int i = 0;//Para iterar.
     bool cadenaVacia = false;//Si encontramos una cadena vacía, valdrá true.
     while(i < nMaxProgramas && !cadenaVacia){
@@ -150,11 +150,6 @@ void dialogo_anadirprograma::aceptar(){
             i++;
         }
     }
-    //j contendrá el índice de la primera cadena vacía.
-    for(int j = 0;j < i;j++){
-        qDebug()<<programa[j];
-    }
-    qDebug()<<"----------------------------------------------";
     archivoLectura.close();
 
     QFile archivoEscritura("programas.dat");

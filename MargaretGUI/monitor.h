@@ -15,6 +15,8 @@ private:
     QList<QString> programaArchivo;//Almacenará el conjunto de programas a monitorizar. Este conjunto estará guardado en programas.dat.
     VentanaPrincipal *vPrincipal;//Monitor modificará de la ventana principal los labels dedicados al conjunto de programas y sus contadores.
     QLocale *transformador;//Nos permitirá pasar de int a QString.
+    int nMaxProgramas;
+    int nProgramas;
 public:
     Monitor(VentanaPrincipal *v = nullptr);
 
