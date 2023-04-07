@@ -14,6 +14,10 @@ Monitor::Monitor(VentanaPrincipal *v)
     transformador = new QLocale;//Reservamos memoria para el transformador.
     nMaxProgramas = 50;//En algún momento lo sincronizaremos con el resto.
     nProgramas = 0;
+    espera = 10;//Tendremos una espera de 10 segundos.
+    for(int i = 0;i < nMaxProgramas;i++){//Debería estar en función de nMaxProgramas la declaración de tiempoPrograma.
+        tiempoPrograma[i] = 0;
+    }
 }
 void Monitor::run(){
     /*Debemos leer los programas de programas.dat. Tendremos tantos contadores
@@ -42,22 +46,29 @@ void Monitor::run(){
     nProgramas = programaArchivo.size();
 
     QString lProgramas = "";
+    QString cProgramas ; "";
+
+    for(int i = 0;i < nProgramas;i++){
+        lProgramas += "<br>" + programaArchivo[i];
+        qDebug()<<nProgramas;
+    }
+
+    vPrincipal->setlistaProgramas(lProgramas);
+
     std::vector<WindowInfo> windowInfoList;
     if(vPrincipal != nullptr){
-        for(int i = 0;i < nProgramas;i++){
-            lProgramas += "<br>" + programaArchivo[i];
-        }
-        vPrincipal->setlistaProgramas(lProgramas);
         while(true){
             clear_windowInfoList();
             EnumWindows(EnumWindowsProc,NULL);
             windowInfoList = get_windowInfoList();
             for(int i = 0;i < nProgramas;i++){
+                qDebug()<<programaArchivo[i]<<":"<<tiempoPrograma[i];
                 if(contains(windowInfoList,programaArchivo[i].toStdString())){
-                    qDebug()<<programaArchivo[i];
+                    //qDebug()<<programaArchivo[i];
+                    tiempoPrograma[i] += espera;
                 }
             }
-            sleep(10);
+            sleep(espera);
         }
     }
 }

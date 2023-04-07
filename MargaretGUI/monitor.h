@@ -17,6 +17,9 @@ private:
     QLocale *transformador;//Nos permitirá pasar de int a QString.
     int nMaxProgramas;
     int nProgramas;
+    unsigned long long int tiempoPrograma[50];//En vez de 50 debería ser nMaxProgramas.
+    //tiempoPrograma[i] almacenará el tiempo de ejecución en segundos del programa i.
+    int espera;
 public:
     Monitor(VentanaPrincipal *v = nullptr);
 

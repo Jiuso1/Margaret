@@ -45,6 +45,8 @@ dialogo_eliminarprograma::dialogo_eliminarprograma(QWidget *parent) : QDialog(pa
 
     connect(aceptarButton,SIGNAL(clicked()),this,SLOT(aceptar()));
     connect(cancelarButton,SIGNAL(clicked()),this,SLOT(close()));
+
+    setWindowTitle(tr("Eliminar programa"));
 }
 void dialogo_eliminarprograma::actualizarProgramasArchivo(){
     int i = 0;

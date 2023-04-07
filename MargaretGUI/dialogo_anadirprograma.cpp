@@ -45,6 +45,8 @@ dialogo_anadirprograma::dialogo_anadirprograma(QWidget *parent) : QDialog(parent
     connect(aceptarButton,SIGNAL(clicked()),this,SLOT(aceptar()));
     connect(cancelarButton,SIGNAL(clicked()),this,SLOT(close()));
 
+    setWindowTitle(tr("Añadir programa"));
+
     //qDebug()<<get_windowInfoList()[1].processName;
 
     //Falta hacer un clear de windowInfo, ya veré cómo se hace. De momento no se actualizan los programas cuando se cierra y se abre el diálogo de nuevo.

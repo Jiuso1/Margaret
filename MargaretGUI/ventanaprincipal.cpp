@@ -49,6 +49,7 @@ VentanaPrincipal::VentanaPrincipal()
     centralWidget->setLayout(verticalLayout);
     setCentralWidget(centralWidget);
     setWindowTitle("Margaret");
+    setWindowIcon(QIcon("./moon.png"));
 
     monitor = new Monitor(this);
     monitor->start();
