@@ -46,8 +46,10 @@ void Monitor::run(){
     nProgramas = programaArchivo.size();
 
     QString lProgramas = "";
-    QString cProgramas ; "";
+    QString cProgramas = "";
+    int segundos = 0, minutos = 0, horas = 0;
 
+    lProgramas+="<br>";
     for(int i = 0;i < nProgramas;i++){
         lProgramas += "<br>" + programaArchivo[i];
         qDebug()<<nProgramas;
@@ -61,13 +63,27 @@ void Monitor::run(){
             clear_windowInfoList();
             EnumWindows(EnumWindowsProc,NULL);
             windowInfoList = get_windowInfoList();
+            cProgramas.clear();
             for(int i = 0;i < nProgramas;i++){
                 qDebug()<<programaArchivo[i]<<":"<<tiempoPrograma[i];
+                if(tiempoPrograma[i] < 60){//Si no ha pasado del minuto...
+                    cProgramas = "<br>" + cProgramas + transformador->toString(tiempoPrograma[i]) + " s" + "<br>";
+                }else if(tiempoPrograma[i] < 3600){//Si no ha pasado de la hora...
+                    minutos = tiempoPrograma[i]/60;
+                    segundos = tiempoPrograma[i]%60;//Hacer división a mano y se entenderá fácilmente.
+                    cProgramas = "<br>" + cProgramas + transformador->toString(minutos) + " min " + transformador->toString(segundos) + " s" "<br>";
+                }else{//Ya no tenemos que comprobar si es menor que un día, puesto que Margaret monitoriza cada día. Un programa no puede tener más de un día en ejecución para Margaret.
+                    horas = tiempoPrograma[i]/3600;
+                    minutos = tiempoPrograma[i]%60;
+                    segundos = tiempoPrograma[i]%3600;
+                    cProgramas = "<br>" + cProgramas + transformador->toString(horas) + " h " + transformador->toString(minutos) + " min " + transformador->toString(segundos) + " s" "<br>";
+                }
                 if(contains(windowInfoList,programaArchivo[i].toStdString())){
                     //qDebug()<<programaArchivo[i];
                     tiempoPrograma[i] += espera;
                 }
             }
+            vPrincipal->setcontadoresProgramas(cProgramas);
             sleep(espera);
         }
     }
