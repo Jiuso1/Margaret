@@ -75,8 +75,7 @@ void Monitor::run(){
                 }else{//Ya no tenemos que comprobar si es menor que un día, puesto que Margaret monitoriza cada día. Un programa no puede tener más de un día en ejecución para Margaret.
                     horas = tiempoPrograma[i]/3600;
                     minutos = tiempoPrograma[i]/60 - horas*60;
-                    segundos = tiempoPrograma[i]%3600;
-                    cProgramas = "<br>" + cProgramas + transformador->toString(horas) + " h " + transformador->toString(minutos) + " min " + transformador->toString(segundos) + " s" "<br>";
+                    cProgramas = "<br>" + cProgramas + transformador->toString(horas) + " h " + transformador->toString(minutos) + " min " + "<br>";
                 }
                 if(contains(windowInfoList,programaArchivo[i].toStdString())){
                     //qDebug()<<programaArchivo[i];
