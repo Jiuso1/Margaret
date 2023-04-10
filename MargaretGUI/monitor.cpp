@@ -65,7 +65,7 @@ void Monitor::run(){
             windowInfoList = get_windowInfoList();
             cProgramas.clear();
             for(int i = 0;i < nProgramas;i++){
-                qDebug()<<programaArchivo[i]<<":"<<tiempoPrograma[i];
+                //qDebug()<<programaArchivo[i]<<":"<<tiempoPrograma[i];
                 if(tiempoPrograma[i] < 60){//Si no ha pasado del minuto...
                     cProgramas = "<br>" + cProgramas + transformador->toString(tiempoPrograma[i]) + " s" + "<br>";
                 }else if(tiempoPrograma[i] < 3600){//Si no ha pasado de la hora...
