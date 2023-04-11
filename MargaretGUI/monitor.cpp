@@ -52,7 +52,7 @@ void Monitor::run(){
     lProgramas+="<br>";
     for(int i = 0;i < nProgramas;i++){
         lProgramas += "<br>" + programaArchivo[i];
-        qDebug()<<nProgramas;
+        //qDebug()<<nProgramas;
     }
 
     vPrincipal->setlistaProgramas(lProgramas);
