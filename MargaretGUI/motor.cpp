@@ -45,7 +45,7 @@ std::vector<WindowInfo> get_windowInfoList(){
     return windowInfoList;
 }
 //A esta función le pasamos la cadena completa del proceso (C\..\proceso.exe) y nos devolverá el nombre del proceso.
-std::wstring nombreProceso(std::wstring cadenaCompleta) {
+std::wstring nombreProceso(const std::wstring cadenaCompleta) {
     size_t pos = cadenaCompleta.find_last_of('\\') + 1;/*La posición de la primera letra del proceso será la de justo después
                                                      de la última barra. Como es back slash hace falta otra back slash.
                                                      Lo ponemos como size_t para evitar pérdida de datos al convertir a int.*/
@@ -62,7 +62,7 @@ std::wstring nombreProceso(std::wstring cadenaCompleta) {
     }
     return nProceso;
 }
-bool contains(std::vector<WindowInfo> vectorWI, std::string s) {
+bool contains(std::vector<WindowInfo> vectorWI, const std::string s) {
     bool encontrado = false;
     for (int i = 0; i < vectorWI.size(); i++) {
         std::string processNameString(vectorWI[i].processName.begin(), vectorWI[i].processName.end());//Así es como transformamos de wstring a string.
