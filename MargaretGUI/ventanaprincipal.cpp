@@ -102,7 +102,11 @@ void VentanaPrincipal::setlistaProgramas(QString lProgramas){
 void VentanaPrincipal::setcontadoresProgramas(QString cProgramas){
     contadoresProgramas->setText(cProgramas);
 }
-
+void VentanaPrincipal::setFecha(QDate *fecha){
+    int dia = 0,mes = 0,anio = 0;
+    fecha->currentDate().getDate(&anio,&mes,&dia);
+    *fechaCadena = "<center><font color='black' size=5 face=arial><b>" + transformador->toString(dia) + "/" + transformador->toString(mes) + "/" + transformador->toString(anio) + "</b></font></center>";
+}
 void VentanaPrincipal::closeEvent(QCloseEvent *event){
 
 }

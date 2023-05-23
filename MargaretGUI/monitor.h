@@ -8,6 +8,7 @@
 class QString;
 class VentanaPrincipal;
 class QLocale;
+class QDate;
 
 class Monitor : public QThread  //El cálculo debe hacerse en paralelo con la respuesta de la interfaz.
 {
@@ -20,6 +21,7 @@ private:
     unsigned long long int tiempoPrograma[50];//En vez de 50 debería ser nMaxProgramas.
     //tiempoPrograma[i] almacenará el tiempo de ejecución en segundos del programa i.
     int espera;
+    QDate *fecha;//Con fecha miraremos si cambia la fecha. Si cambia, reiniciamos los contadores y cambiamos la label de VPrincipal.
 public:
     Monitor(VentanaPrincipal *v = nullptr);
 

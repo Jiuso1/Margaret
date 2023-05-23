@@ -7,6 +7,7 @@
 #include <string>
 #include <QLocale>
 #include <QFile>
+#include <QDate>
 
 Monitor::Monitor(VentanaPrincipal *v)
 {
@@ -15,11 +16,13 @@ Monitor::Monitor(VentanaPrincipal *v)
     nMaxProgramas = 50;//En algún momento lo sincronizaremos con el resto.
     nProgramas = 0;
     espera = 10;//Tendremos una espera de 10 segundos.
+    fecha = new QDate;
     for(int i = 0;i < nMaxProgramas;i++){//Debería estar en función de nMaxProgramas la declaración de tiempoPrograma.
         tiempoPrograma[i] = 0;
     }
 }
 void Monitor::run(){
+    int dia = 0, diaPrevio = 0;//Almacenaremos el día actual y el día previo en cada momento. Si son diferentes ambos días, es que hemos cambiado de día.
     /*Debemos leer los programas de programas.dat. Tendremos tantos contadores
     como programas haya.*/
     int i = 0;
@@ -60,6 +63,14 @@ void Monitor::run(){
     std::vector<WindowInfo> windowInfoList;
     if(vPrincipal != nullptr){
         while(true){
+            fecha->currentDate().getDate(NULL,NULL,&dia);
+            if(dia != diaPrevio){
+                vPrincipal->setFecha(fecha);
+                diaPrevio = dia;
+                for(int i = 0;i < nProgramas;i++){
+                    tiempoPrograma[i] = 0;
+                }
+            }
             clear_windowInfoList();
             EnumWindows(EnumWindowsProc,NULL);
             windowInfoList = get_windowInfoList();

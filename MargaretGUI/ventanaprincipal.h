@@ -28,6 +28,7 @@ public:
     void createMenus();
     void setlistaProgramas(QString lProgramas);//Lo usaremos en Monitor.
     void setcontadoresProgramas(QString cProgramas);
+    void setFecha(QDate *fecha);//El monitor continuamente revisará si la fecha cambia. Si la fecha cambia, nos asignará una nueva fecha con este método.
 protected:
     void closeEvent(QCloseEvent *event);
 
