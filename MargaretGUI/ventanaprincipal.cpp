@@ -19,9 +19,11 @@ VentanaPrincipal::VentanaPrincipal()
     fechaLabel = new QLabel;
     fecha = new QDate;
     fechaCadena = new QString;
+    fechaEstilo = new QString;
     transformador = new QLocale;
     //qDebug()<<transformador->toString(12);
     listaProgramas = new QLabel;
+    listaProgramasEstilo = new QLabel;
     contadoresProgramas = new QLabel;
     horizontalLayout = new QHBoxLayout;
     centralWidget = new QWidget;
@@ -30,11 +32,15 @@ VentanaPrincipal::VentanaPrincipal()
     int dia = 0,mes = 0,anio = 0;
     fecha->currentDate().getDate(&anio,&mes,&dia);
 
-    *fechaCadena = "<center><font color='black' size=5 face=arial><b>" + transformador->toString(dia) + "/" + transformador->toString(mes) + "/" + transformador->toString(anio) + "</b></font></center>";
-    fechaLabel->setText(*fechaCadena);
-    listaProgramas->setText("Chrome <br> TikTok");
-    contadoresProgramas->setText("3 h 21 min <br> 29 min 40 s");
+    *fechaCadena = "<h1><center>" + transformador->toString(dia) + "/" + transformador->toString(mes) + "/" + transformador->toString(anio) + "</center></h1>";
+    *fechaEstilo = "color: #2d93ca; font: lighter 9pt;";
 
+    fechaLabel->setText(*fechaCadena);
+    fechaLabel->setStyleSheet(*fechaEstilo);
+
+    listaProgramas->setText("Chrome <br> TikTok");
+    listaProgramasEstilo->setText("");
+    contadoresProgramas->setText("3 h 21 min <br> 29 min 40 s");
 
     verticalLayout->addWidget(fechaLabel);
     horizontalLayout->addWidget(listaProgramas);

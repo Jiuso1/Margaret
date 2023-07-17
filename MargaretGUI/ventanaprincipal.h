@@ -42,7 +42,9 @@ private:
     QDate *fecha;//Con este objeto obtendremos la fecha actual del sistema usando el método currentDate().
     QLocale *transformador;//Nos permitirá pasar de int a QString.
     QString *fechaCadena;//Almacenará la cadena que le pasaremos a fechaLabel para que la muestre.
+    QString *fechaEstilo;
     QLabel *listaProgramas;//Almacenará el conjunto de programas a monitorizar junto con sus contadores respectivos y junto con el icono de los programas. Todo ello se realizará con el formato HTML.
+    QLabel *listaProgramasEstilo;
     QHBoxLayout *horizontalLayout;//Layout en el que incluiremos la lista de programas junto con sus respectivos contadores.
     QLabel *contadoresProgramas;//Almacenará el conjunto de contadores asociados a listaProgramas.
     QWidget *centralWidget;//Este widget lo pondremos en el centro de nuestra ventana QMainWindow. Este contendrá el layout principal.
@@ -52,7 +54,6 @@ private:
     QAction *ayudaMargaretAction;
     QMenu *programasMenu;
     QMenu *ayudaMenu;
-    Monitor monitorProgramas;
     dialogo_anadirprograma *dialogoAdd;
     dialogo_eliminarprograma *dialogoRemove;
     Monitor *monitor;//Es el encargado de hablar con el sistema operativo y de calcular los tiempos.
