@@ -67,7 +67,7 @@ VentanaPrincipal::VentanaPrincipal()
     tabla->setColumnCount(2);
     nProgramasDeseados = monitor->get_nProgramas();
     tabla->setRowCount(nProgramasDeseados);//El número de filas de la tabla será igual al nº de programas deseados a monitorizar.
-
+    //Debemos completar lo de debajo:
 }
 //Abriremos el diálogo de añadir programas.
 void VentanaPrincipal::anadirPrograma(){
