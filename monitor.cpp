@@ -58,7 +58,8 @@ void Monitor::run(){
         //qDebug()<<nProgramas;
     }
 
-    vPrincipal->setlistaProgramas(lProgramas);
+    vPrincipal->setlistaProgramas(lProgramas);//Sustituiremos esta línea por la de debajo.
+    vPrincipal->setPrograma(programaArchivo);
 
     std::vector<WindowInfo> windowInfoList;
     if(vPrincipal != nullptr){

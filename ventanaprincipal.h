@@ -30,6 +30,7 @@ public:
     void setlistaProgramas(QString lProgramas);//Lo usaremos en Monitor.
     void setcontadoresProgramas(QString cProgramas);
     void setFecha(QDate *fecha);//El monitor continuamente revisará si la fecha cambia. Si la fecha cambia, nos asignará una nueva fecha con este método.
+    void setPrograma(const QStringList &programa);//Se asigna a la lista de programas deseados a monitorizar la lista de programas leída desde el archivo por el monitor.
 protected:
     void closeEvent(QCloseEvent *event);
 

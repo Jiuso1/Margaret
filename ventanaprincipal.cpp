@@ -88,6 +88,11 @@ VentanaPrincipal::VentanaPrincipal()
         tabla->setVerticalHeaderItem(i, item);//Por cada fila pondremos un item con cadena vacía.
     }
 
+    for(int i = 0;i < tabla->rowCount();i++){
+        item = new QTableWidgetItem;
+        item->setText(programa->at(i));
+        tabla->setItem(i, 0, item);//Por cada fila en la columna 0 pondremos un item con el nombre de un proceso.
+    }
 
 }
 
@@ -134,6 +139,10 @@ void VentanaPrincipal::setFecha(QDate *fecha){
     int dia = 0,mes = 0,anio = 0;
     fecha->currentDate().getDate(&anio,&mes,&dia);
     *fechaCadena = "<center><font color='black' size=5 face=arial><b>" + transformador->toString(dia) + "/" + transformador->toString(mes) + "/" + transformador->toString(anio) + "</b></font></center>";
+}
+
+void VentanaPrincipal::setPrograma(const QStringList &programa){
+    *(this->programa) = programa;
 }
 
 void VentanaPrincipal::closeEvent(QCloseEvent *event){
