@@ -59,6 +59,8 @@ private:
     Monitor *monitor;//Es el encargado de hablar con el sistema operativo y de calcular los tiempos.
     QTableWidget *tabla;
     int i;//Se incrementará cada vez que se añada una celda de un programa deseado.
+    int nColumnas;//Almacena el número de columnas.
+    QStringList *programa;//Almacena los programas deseados a monitorizar.
 };
 
 #endif // VENTANAPRINCIPAL_H
