@@ -33,6 +33,7 @@ VentanaPrincipal::VentanaPrincipal()
     i = 0;
     nColumnas = 2;
     programa = new QStringList;
+    contador = new QStringList;
 
     int dia = 0,mes = 0,anio = 0, nProgramasDeseados = 0;
 
@@ -74,6 +75,11 @@ VentanaPrincipal::VentanaPrincipal()
     tabla->setRowCount(nProgramasDeseados);//El número de filas de la tabla será igual al nº de programas deseados a monitorizar.
     tabla->setSelectionMode(QAbstractItemView::NoSelection);//Desactivamos la posibilidad de seleccionar en la tabla.
 
+    //Añadimos e inicializamos las cadenas a 0:
+    for(int i = 0;i < tabla->rowCount();i++){
+        contador->append("0");
+    }
+
     //Llenamos el horizontal header:
     item->setText("Proceso");//item está inicializado.
     tabla->setHorizontalHeaderItem(0, item);
@@ -88,10 +94,18 @@ VentanaPrincipal::VentanaPrincipal()
         tabla->setVerticalHeaderItem(i, item);//Por cada fila pondremos un item con cadena vacía.
     }
 
+    //Llenamos la columna de procesos:
     for(int i = 0;i < tabla->rowCount();i++){
         item = new QTableWidgetItem;
         item->setText(programa->at(i));
         tabla->setItem(i, 0, item);//Por cada fila en la columna 0 pondremos un item con el nombre de un proceso.
+    }
+
+    //Llenamos la columna de tiempos:
+    for(int i = 0;i < tabla->rowCount();i++){
+        item = new QTableWidgetItem;
+        item->setText(contador->at(i));
+        tabla->setItem(i, 1, item);//Por cada fila en la columna 1 pondremos un item con el contador del proceso.
     }
 
 }
@@ -143,6 +157,15 @@ void VentanaPrincipal::setFecha(QDate *fecha){
 
 void VentanaPrincipal::setPrograma(const QStringList &programa){
     *(this->programa) = programa;
+}
+
+void VentanaPrincipal::setContador(const QStringList &contador){
+    *(this->contador) = contador;
+    for(int i = 0;i < tabla->rowCount();i++){
+        QTableWidgetItem *item = new QTableWidgetItem;
+        item->setText(contador.at(i));
+        tabla->setItem(i, 1, item);//Por cada fila en la columna 1 pondremos un item con el contador del proceso.
+    }
 }
 
 void VentanaPrincipal::closeEvent(QCloseEvent *event){

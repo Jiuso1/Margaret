@@ -21,6 +21,7 @@ Monitor::Monitor(VentanaPrincipal *v)
         tiempoPrograma[i] = 0;
     }
 }
+
 void Monitor::run(){
     int dia = 0, diaPrevio = 0;//Almacenaremos el día actual y el día previo en cada momento. Si son diferentes ambos días, es que hemos cambiado de día.
     /*Debemos leer los programas de programas.dat. Tendremos tantos contadores
@@ -50,6 +51,7 @@ void Monitor::run(){
 
     QString lProgramas = "";
     QString cProgramas = "";
+    QStringList contador;
     int segundos = 0, minutos = 0, horas = 0;
 
     lProgramas+="<br>";
@@ -70,6 +72,7 @@ void Monitor::run(){
                 diaPrevio = dia;
                 for(int i = 0;i < nProgramas;i++){
                     tiempoPrograma[i] = 0;
+                    contador.append("0");//Añadimos tantos contadores como programas haya. Inicializamos a la cadena "0".
                 }
             }
             clear_windowInfoList();
@@ -80,14 +83,17 @@ void Monitor::run(){
                 //qDebug()<<programaArchivo[i]<<":"<<tiempoPrograma[i];
                 if(tiempoPrograma[i] < 60){//Si no ha pasado del minuto...
                     cProgramas = "<br>" + cProgramas + transformador->toString(tiempoPrograma[i]) + " s" + "<br>";
+                    contador[i] = transformador->toString(tiempoPrograma[i]) + " s";
                 }else if(tiempoPrograma[i] < 3600){//Si no ha pasado de la hora...
                     minutos = tiempoPrograma[i]/60;
                     segundos = tiempoPrograma[i]%60;//Hacer división a mano y se entenderá fácilmente.
                     cProgramas = "<br>" + cProgramas + transformador->toString(minutos) + " min " + transformador->toString(segundos) + " s" "<br>";
+                    contador[i] = transformador->toString(minutos) + " min " + transformador->toString(segundos) + " s";
                 }else{//Ya no tenemos que comprobar si es menor que un día, puesto que Margaret monitoriza cada día. Un programa no puede tener más de un día en ejecución para Margaret.
                     horas = tiempoPrograma[i]/3600;
                     minutos = tiempoPrograma[i]/60 - horas*60;
                     cProgramas = "<br>" + cProgramas + transformador->toString(horas) + " h " + transformador->toString(minutos) + " min " + "<br>";
+                    contador[i] = transformador->toString(horas) + " h " + transformador->toString(minutos) + " min ";
                 }
                 if(contains(windowInfoList,programaArchivo[i].toStdString())){
                     //qDebug()<<programaArchivo[i];
@@ -95,6 +101,7 @@ void Monitor::run(){
                 }
             }
             vPrincipal->setcontadoresProgramas(cProgramas);
+            vPrincipal->setContador(contador);
             sleep(espera);
         }
     }

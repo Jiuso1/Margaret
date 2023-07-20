@@ -31,6 +31,7 @@ public:
     void setcontadoresProgramas(QString cProgramas);
     void setFecha(QDate *fecha);//El monitor continuamente revisará si la fecha cambia. Si la fecha cambia, nos asignará una nueva fecha con este método.
     void setPrograma(const QStringList &programa);//Se asigna a la lista de programas deseados a monitorizar la lista de programas leída desde el archivo por el monitor.
+    void setContador(const QStringList &contador);//Asignamos a la lista de contadores la lista de contadores dada. El monitor se preocupará por darnos la lista actualizada correctamente.
 protected:
     void closeEvent(QCloseEvent *event);
 
@@ -62,6 +63,7 @@ private:
     int i;//Se incrementará cada vez que se añada una celda de un programa deseado.
     int nColumnas;//Almacena el número de columnas.
     QStringList *programa;//Almacena los programas deseados a monitorizar.
+    QStringList *contador;//Almacena los contadores respectivos a cada programa deseado a monitorizar.
 };
 
 #endif // VENTANAPRINCIPAL_H
