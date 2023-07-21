@@ -27,8 +27,6 @@ public:
     void createActions();
     void createToolBars();
     void createMenus();
-    void setlistaProgramas(QString lProgramas);//Lo usaremos en Monitor.
-    void setcontadoresProgramas(QString cProgramas);
     void setFecha(QDate *fecha);//El monitor continuamente revisará si la fecha cambia. Si la fecha cambia, nos asignará una nueva fecha con este método.
     void setPrograma(const QStringList &programa);//Se asigna a la lista de programas deseados a monitorizar la lista de programas leída desde el archivo por el monitor.
     void setContador(const QStringList &contador);//Asignamos a la lista de contadores la lista de contadores dada. El monitor se preocupará por darnos la lista actualizada correctamente.
@@ -46,9 +44,6 @@ private:
     QLocale *transformador;//Nos permitirá pasar de int a QString.
     QString *fechaCadena;//Almacenará la cadena que le pasaremos a fechaLabel para que la muestre.
     QString *fechaEstilo;
-    QLabel *listaProgramas;//Almacenará el conjunto de programas a monitorizar junto con sus contadores respectivos y junto con el icono de los programas. Todo ello se realizará con el formato HTML.
-    QHBoxLayout *horizontalLayout;//Layout en el que incluiremos la lista de programas junto con sus respectivos contadores.
-    QLabel *contadoresProgramas;//Almacenará el conjunto de contadores asociados a listaProgramas.
     QWidget *centralWidget;//Este widget lo pondremos en el centro de nuestra ventana QMainWindow. Este contendrá el layout principal.
     QAction *anadirProgramaAction;//Este QAction será añadido a una QToolBar. Será responsable de abrir la ventana diálogo encargada de solicitar la información del nuevo programa en la lista.
     QAction *eliminarProgramaAction;//Homólogo al QAction de arriba, pero para abrir la ventana diálogo encargada de eliminar el programa deseado.

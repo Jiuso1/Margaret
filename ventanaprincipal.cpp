@@ -23,10 +23,6 @@ VentanaPrincipal::VentanaPrincipal()
     fechaCadena = new QString;
     fechaEstilo = new QString;
     transformador = new QLocale;
-    //qDebug()<<transformador->toString(12);
-    listaProgramas = new QLabel;
-    contadoresProgramas = new QLabel;
-    horizontalLayout = new QHBoxLayout;
     centralWidget = new QWidget;
     dialogoAdd = nullptr;//Importantísimo inicializarlo a nullptr.
     tabla = new QTableWidget;
@@ -47,15 +43,8 @@ VentanaPrincipal::VentanaPrincipal()
     fechaLabel->setText(*fechaCadena);
     fechaLabel->setStyleSheet(*fechaEstilo);
 
-    listaProgramas->setText("Chrome <br> TikTok");
-    contadoresProgramas->setText("3 h 21 min <br> 29 min 40 s");
-
     verticalLayout->addWidget(fechaLabel);
-    horizontalLayout->addWidget(listaProgramas);
-    horizontalLayout->addSpacing(100);//Lo ponemos justo en medio de listaProgramas y contadoresProgramas.
-    horizontalLayout->addWidget(contadoresProgramas);
-    verticalLayout->addLayout(horizontalLayout);
-    horizontalLayout->setAlignment(Qt::AlignHCenter);
+    verticalLayout->addSpacing(10);
     verticalLayout->addWidget(tabla);
 
     createActions();
@@ -139,14 +128,6 @@ void VentanaPrincipal::createMenus(){
     ayudaMenu = menuBar()->addMenu(tr("&Ayuda"));
     ayudaMenu->addAction(ayudaMargaretAction);
     ayudaMenu->addAction(aboutQtAction);
-}
-
-void VentanaPrincipal::setlistaProgramas(QString lProgramas){
-    listaProgramas->setText(lProgramas);//Le asigna a listaProgramas la cadena lProgramas.
-}
-
-void VentanaPrincipal::setcontadoresProgramas(QString cProgramas){
-    contadoresProgramas->setText(cProgramas);
 }
 
 void VentanaPrincipal::setFecha(QDate *fecha){
