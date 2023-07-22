@@ -14,6 +14,7 @@
 #include <QMenuBar>
 #include <QTableWidget>
 #include <QStringList>
+#include <QHeaderView>
 
 VentanaPrincipal::VentanaPrincipal()
 {
@@ -63,6 +64,13 @@ VentanaPrincipal::VentanaPrincipal()
     nProgramasDeseados = monitor->get_nProgramas();
     tabla->setRowCount(nProgramasDeseados);//El número de filas de la tabla será igual al nº de programas deseados a monitorizar.
     tabla->setSelectionMode(QAbstractItemView::NoSelection);//Desactivamos la posibilidad de seleccionar en la tabla.
+    tabla->setMinimumWidth(sizeHint().width());//Pondremos un ancho mínimo recomendado por Qt.
+    tabla->setMinimumHeight(sizeHint().height());
+    tabla->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);//Las columnas se estirarán automáticamente para cubrir el contenido.
+
+    //CSS de la tabla:
+    QString tablaEstilo = "background-color: #e0f7ff; font-family: Calibri;";
+    tabla->setStyleSheet(tablaEstilo);
 
     //Añadimos e inicializamos las cadenas a 0:
     for(int i = 0;i < tabla->rowCount();i++){
@@ -70,23 +78,20 @@ VentanaPrincipal::VentanaPrincipal()
     }
 
     //Llenamos el horizontal header:
-    item->setText("Proceso");//item está inicializado.
+    item->setText("Programa");//item está inicializado.
     tabla->setHorizontalHeaderItem(0, item);
     item = new QTableWidgetItem;//Creamos otro QTableWidgetItem al que apuntaremos con item. Este tendrá otro texto.
     item->setText("Tiempo");
     tabla->setHorizontalHeaderItem(1, item);
 
-    //Llenamos el vertical header:
-    for(int i = 0;i < tabla->rowCount();i++){
-        item = new QTableWidgetItem;
-        item->setText("");
-        tabla->setVerticalHeaderItem(i, item);//Por cada fila pondremos un item con cadena vacía.
-    }
+    //Ocultamos el vertical header:
+    tabla->verticalHeader()->hide();
 
     //Llenamos la columna de procesos:
     for(int i = 0;i < tabla->rowCount();i++){
         item = new QTableWidgetItem;
         item->setText(programa->at(i));
+        item->setFlags(Qt::ItemIsEnabled);//Con esta flag se puede seleccionar el item pero no alterarlo.
         tabla->setItem(i, 0, item);//Por cada fila en la columna 0 pondremos un item con el nombre de un proceso.
     }
 
@@ -96,7 +101,6 @@ VentanaPrincipal::VentanaPrincipal()
         item->setText(contador->at(i));
         tabla->setItem(i, 1, item);//Por cada fila en la columna 1 pondremos un item con el contador del proceso.
     }
-
 }
 
 //Abriremos el diálogo de añadir programas.
@@ -145,6 +149,7 @@ void VentanaPrincipal::setContador(const QStringList &contador){
     for(int i = 0;i < tabla->rowCount();i++){
         QTableWidgetItem *item = new QTableWidgetItem;
         item->setText(contador.at(i));
+        item->setFlags(Qt::ItemIsEnabled);//Con esta flag se puede seleccionar el item pero no alterarlo.
         tabla->setItem(i, 1, item);//Por cada fila en la columna 1 pondremos un item con el contador del proceso.
     }
 }
