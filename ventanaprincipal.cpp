@@ -69,7 +69,7 @@ VentanaPrincipal::VentanaPrincipal()
     tabla->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);//Las columnas se estirarán automáticamente para cubrir el contenido.
 
     //CSS de la tabla:
-    QString tablaEstilo = "background-color: #e0f7ff; font-family: Calibri;";
+    QString tablaEstilo = "background-color: #e0f7ff; font-size: 14pt; font-family: Calibri";
     tabla->setStyleSheet(tablaEstilo);
 
     //Añadimos e inicializamos las cadenas a 0:
@@ -93,13 +93,6 @@ VentanaPrincipal::VentanaPrincipal()
         item->setText(programa->at(i));
         item->setFlags(Qt::ItemIsEnabled);//Con esta flag se puede seleccionar el item pero no alterarlo.
         tabla->setItem(i, 0, item);//Por cada fila en la columna 0 pondremos un item con el nombre de un proceso.
-    }
-
-    //Llenamos la columna de tiempos:
-    for(int i = 0;i < tabla->rowCount();i++){
-        item = new QTableWidgetItem;
-        item->setText(contador->at(i));
-        tabla->setItem(i, 1, item);//Por cada fila en la columna 1 pondremos un item con el contador del proceso.
     }
 }
 
