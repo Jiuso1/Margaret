@@ -36,6 +36,9 @@ VentanaPrincipal::VentanaPrincipal()
 
     QTableWidgetItem *item = new QTableWidgetItem;
 
+    QFont font;//Declaramos una fuente para los programas.
+    font.setBold(true);//Ponemos la fuente negrita.
+
     fecha->currentDate().getDate(&anio,&mes,&dia);
 
     *fechaCadena = "<h1><center>" + transformador->toString(dia) + "/" + transformador->toString(mes) + "/" + transformador->toString(anio) + "</center></h1>";
@@ -92,6 +95,7 @@ VentanaPrincipal::VentanaPrincipal()
         item = new QTableWidgetItem;
         item->setText(programa->at(i));
         item->setFlags(Qt::ItemIsEnabled);//Con esta flag se puede seleccionar el item pero no alterarlo.
+        item->setFont(font);
         tabla->setItem(i, 0, item);//Por cada fila en la columna 0 pondremos un item con el nombre de un proceso.
     }
 }
@@ -148,5 +152,5 @@ void VentanaPrincipal::setContador(const QStringList &contador){
 }
 
 void VentanaPrincipal::closeEvent(QCloseEvent *event){
-
+    //Guardamos los contadores:
 }
