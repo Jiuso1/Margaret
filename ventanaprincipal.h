@@ -31,6 +31,7 @@ public:
     void setPrograma(const QStringList &programa);//Se asigna a la lista de programas deseados a monitorizar la lista de programas leída desde el archivo por el monitor.
     void setContador(const QStringList &contador);//Asignamos a la lista de contadores la lista de contadores dada. El monitor se preocupará por darnos la lista actualizada correctamente.
     bool guardarContador();//Guarda los contadores en un archivo. Para ello llama a un método del monitor.
+    QMap<QString,unsigned long long int> leerContador();//Lee los contadores de un archivo. Le pasaremos el mapa al monitor.
 protected:
     void closeEvent(QCloseEvent *event);
 

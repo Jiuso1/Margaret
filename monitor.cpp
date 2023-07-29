@@ -99,6 +99,7 @@ int Monitor::get_nProgramas(){
 
 bool Monitor::guardarContador(){
     bool guardado = false;
+    int diaArchivo = 0, mesArchivo = 0, anhoArchivo = 0;
 
     QMap<QString,unsigned long long int> mapaContador;//Mapea cada programa con el contador correspondiente.
 
@@ -114,7 +115,8 @@ bool Monitor::guardarContador(){
         qDebug()<<qPrintable(archivoEscritura.errorString());
     }else{
         salida.setVersion(QDataStream::Qt_6_4);
-        salida<<mapaContador;//No es necesario escribir la fecha en el archivo porque podremos ver la fecha de creación del archivo.
+        fecha->currentDate().getDate(&anhoArchivo, &mesArchivo, &diaArchivo);
+        salida<<diaArchivo<<mesArchivo<<anhoArchivo<<mapaContador;//Escribimos la fecha de los contadores y el mapa.
         guardado = true;
         archivoEscritura.close();
     }

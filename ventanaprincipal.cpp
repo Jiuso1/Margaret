@@ -16,6 +16,7 @@
 #include <QStringList>
 #include <QHeaderView>
 #include <QMap>
+#include <QFile>
 
 VentanaPrincipal::VentanaPrincipal()
 {
@@ -59,6 +60,9 @@ VentanaPrincipal::VentanaPrincipal()
     setCentralWidget(centralWidget);
     setWindowTitle("Margaret");
     setWindowIcon(QIcon("./moon.png"));
+
+    //El monitor tendrá un constructor con parámetros.
+    leerContador();
 
     monitor = new Monitor(this);
     monitor->start();
@@ -158,7 +162,36 @@ bool VentanaPrincipal::guardarContador(){
     return monitor->guardarContador();
 }
 
-void VentanaPrincipal::closeEvent(QCloseEvent *event){
-    //Guardamos los contadores:
-    guardarContador();
+QMap<QString,unsigned long long int> VentanaPrincipal::leerContador(){
+    QMap<QString,unsigned long long int> mapaContador;
+
+    QDate *fecha = new QDate;//Contendrá la fecha del archivo usando currentDate().
+
+    int diaArchivo = 0, mesArchivo = 0, anhoArchivo = 0, dia = 0, mes = 0, anho = 0;
+
+    QFile archivoLectura("contadores.dat");
+    QDataStream entrada(&archivoLectura);
+    if(!archivoLectura.open(QIODevice::ReadOnly)){
+        qDebug()<<"No se pudo abrir el archivo";
+        qDebug()<<qPrintable(archivoLectura.errorString());
+    }else{
+        entrada.setVersion(QDataStream::Qt_6_4);
+        entrada>>diaArchivo>>mesArchivo>>anhoArchivo;//Leemos las tres variables escritas en el archivo.
+        fecha->currentDate().getDate(&anho, &mes, &dia);//Asignamos a las variables pasadas por parámetro el valor correspondiente de la fecha actual.
+        if(diaArchivo == dia && mesArchivo == mes && anhoArchivo == anho){//Si la fecha del archivo coincide con la fecha actual, rescatamos los contadores.
+            entrada>>mapaContador;
+        }
+        /*qDebug()<<diaArchivo<<"\t"<<mesArchivo<<"\t"<<anhoArchivo<<"\n"
+                 <<dia<<"\t"<<mes<<"\t"<<anho<<"\n";*/
+    }
+
+    delete fecha;
+
+    return mapaContador;
 }
+
+void VentanaPrincipal::closeEvent(QCloseEvent *event){
+    guardarContador();//Cuando se cierre la aplicación, se guardan los contadores.
+}
+
+
