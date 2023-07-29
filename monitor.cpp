@@ -96,3 +96,28 @@ void Monitor::run(){
 int Monitor::get_nProgramas(){
     return nProgramas;
 }
+
+bool Monitor::guardarContador(){
+    bool guardado = false;
+
+    QMap<QString,unsigned long long int> mapaContador;//Mapea cada programa con el contador correspondiente.
+
+    for(int i = 0;i < nProgramas;i++){
+        mapaContador.insert(programaArchivo[i],tiempoPrograma[i]);//Por cada programa añadido al archivo, almacenaremos su contador.
+    }
+
+    QFile archivoEscritura("contadores.dat");
+    QDataStream salida(&archivoEscritura);
+
+    if(!archivoEscritura.open(QIODevice::WriteOnly)){
+        qDebug()<<"No se pudo abrir el archivo";
+        qDebug()<<qPrintable(archivoEscritura.errorString());
+    }else{
+        salida.setVersion(QDataStream::Qt_6_4);
+        salida<<mapaContador;//No es necesario escribir la fecha en el archivo porque podremos ver la fecha de creación del archivo.
+        guardado = true;
+        archivoEscritura.close();
+    }
+
+    return guardado;
+}

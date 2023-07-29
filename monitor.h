@@ -24,6 +24,7 @@ private:
 public:
     Monitor(VentanaPrincipal *v = nullptr);
     int get_nProgramas();
+    bool guardarContador();
 
 protected:
     void run();

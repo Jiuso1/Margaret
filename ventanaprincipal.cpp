@@ -15,6 +15,7 @@
 #include <QTableWidget>
 #include <QStringList>
 #include <QHeaderView>
+#include <QMap>
 
 VentanaPrincipal::VentanaPrincipal()
 {
@@ -98,6 +99,8 @@ VentanaPrincipal::VentanaPrincipal()
         item->setFont(fontProgramas);
         tabla->setItem(i, 0, item);//Por cada fila en la columna 0 pondremos un item con el nombre de un proceso.
     }
+
+    tabla->setCurrentCell(-1,-1);//Ponemos la selección por defecto a una celda que no se ve.
 }
 
 //Abriremos el diálogo de añadir programas.
@@ -151,7 +154,11 @@ void VentanaPrincipal::setContador(const QStringList &contador){
     }
 }
 
+bool VentanaPrincipal::guardarContador(){
+    return monitor->guardarContador();
+}
+
 void VentanaPrincipal::closeEvent(QCloseEvent *event){
     //Guardamos los contadores:
-
+    guardarContador();
 }
