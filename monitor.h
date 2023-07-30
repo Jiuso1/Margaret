@@ -3,6 +3,7 @@
 
 #include <QThread>
 #include <vector>
+#include <QMap>//Algún día aprenderé a hacer la definición de la clase para no tener que incluir en el h clases con plantillas...
 
 class QString;
 class VentanaPrincipal;
@@ -21,8 +22,10 @@ private:
     //tiempoPrograma[i] almacenará el tiempo de ejecución en segundos del programa i.
     int espera;
     QDate *fecha;//Con fecha miraremos si cambia la fecha. Si cambia, reiniciamos los contadores y cambiamos la label de VPrincipal.
+    QMap<QString,unsigned long long int> mapaContador;//Es el mapa que nos ha pasado la ventana principal.
 public:
     Monitor(VentanaPrincipal *v = nullptr);
+    Monitor(VentanaPrincipal *v, const QMap<QString,unsigned long long int> &mapaContador);//Constructor para cuando hace falta pasarle los contadores (porque nos encontramos en el mismo día). Referencias constantes a tope.
     int get_nProgramas();
     bool guardarContador();
 

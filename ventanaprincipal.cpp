@@ -41,6 +41,8 @@ VentanaPrincipal::VentanaPrincipal()
     QFont fontProgramas;//Declaramos una fuente para los programas.
     fontProgramas.setBold(true);//Ponemos la fuente negrita.
 
+    QMap<QString,unsigned long long int> mapaContador;//Almacenará el mapa de contadores del archivo.
+
     fecha->currentDate().getDate(&anio,&mes,&dia);
 
     *fechaCadena = "<h1><center>" + transformador->toString(dia) + "/" + transformador->toString(mes) + "/" + transformador->toString(anio) + "</center></h1>";
@@ -62,9 +64,13 @@ VentanaPrincipal::VentanaPrincipal()
     setWindowIcon(QIcon("./moon.png"));
 
     //El monitor tendrá un constructor con parámetros.
-    leerContador();
+    mapaContador = leerContador();//Le asignamos al mapa el mapa leído del archivo.
+    if(mapaContador.size() == 0){
+        monitor = new Monitor(this);//Si no hay contadores para este día, no le pasemos contadores al monitor.
+    }else{
+        monitor = new Monitor(this,mapaContador);//Si sí hay contadores para este día, le pasamos los contadores al monitor.
+    }
 
-    monitor = new Monitor(this);
     monitor->start();
 
     tabla->showGrid();
@@ -162,7 +168,7 @@ bool VentanaPrincipal::guardarContador(){
     return monitor->guardarContador();
 }
 
-QMap<QString,unsigned long long int> VentanaPrincipal::leerContador(){
+QMap<QString,unsigned long long int> VentanaPrincipal::leerContador(){//Retorna el mapa de contadores.
     QMap<QString,unsigned long long int> mapaContador;
 
     QDate *fecha = new QDate;//Contendrá la fecha del archivo usando currentDate().
@@ -193,5 +199,3 @@ QMap<QString,unsigned long long int> VentanaPrincipal::leerContador(){
 void VentanaPrincipal::closeEvent(QCloseEvent *event){
     guardarContador();//Cuando se cierre la aplicación, se guardan los contadores.
 }
-
-

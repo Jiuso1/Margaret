@@ -9,8 +9,7 @@
 #include <QFile>
 #include <QDate>
 
-Monitor::Monitor(VentanaPrincipal *v)
-{
+Monitor::Monitor(VentanaPrincipal *v){
     vPrincipal = v;//Hacemos que vPrincipal apunte a v (a la ventana principal original).
     transformador = new QLocale;//Reservamos memoria para el transformador.
     nMaxProgramas = 50;//En algún momento lo sincronizaremos con el resto.
@@ -20,6 +19,20 @@ Monitor::Monitor(VentanaPrincipal *v)
     for(int i = 0;i < nMaxProgramas;i++){//Debería estar en función de nMaxProgramas la declaración de tiempoPrograma.
         tiempoPrograma[i] = 0;
     }
+}
+
+Monitor::Monitor(VentanaPrincipal *v, const QMap<QString,unsigned long long int> &mapaContador){
+    //El constructor será igual que el de arriba, lo único nuevo es que guardará el mapa en el atributo correspondiente.
+    vPrincipal = v;
+    transformador = new QLocale;
+    nMaxProgramas = 50;
+    nProgramas = 0;
+    espera = 10;
+    fecha = new QDate;
+    for(int i = 0;i < nMaxProgramas;i++){
+        tiempoPrograma[i] = 0;
+    }
+    this->mapaContador = mapaContador;//Le asignamos al mapa de la clase Monitor el mapa pasado por parámetro.
 }
 
 void Monitor::run(){
@@ -62,10 +75,11 @@ void Monitor::run(){
                 vPrincipal->setFecha(fecha);
                 diaPrevio = dia;
                 for(int i = 0;i < nProgramas;i++){
-                    tiempoPrograma[i] = 0;
+                    tiempoPrograma[i] = 0 + mapaContador[programaArchivo[i]];//Ponemos a 0 los contadores si cambia el día. Además,
                     contador.append("0");//Añadimos tantos contadores como programas haya. Inicializamos a la cadena "0".
                 }
             }
+            mapaContador.clear();//Cuando hemos terminado de usar el diccionario, lo eliminamos.
             clear_windowInfoList();
             EnumWindows(EnumWindowsProc,NULL);
             windowInfoList = get_windowInfoList();
