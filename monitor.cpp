@@ -72,7 +72,8 @@ void Monitor::run(){
         while(true){
             fecha->currentDate().getDate(NULL,NULL,&dia);
             if(dia != diaPrevio){
-                vPrincipal->setFecha(fecha);
+                *fecha = fecha->currentDate();//Actualizamos la fecha actual.
+                vPrincipal->setFecha(fecha);//Actualizamos la fecha de la ventana.
                 diaPrevio = dia;
                 for(int i = 0;i < nProgramas;i++){
                     tiempoPrograma[i] = 0 + mapaContador[programaArchivo[i]];//Ponemos a 0 los contadores si cambia el día. Además,
