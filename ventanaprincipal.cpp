@@ -24,7 +24,6 @@ VentanaPrincipal::VentanaPrincipal()
     fechaLabel = new QLabel;
     fecha = new QDate;
     fechaCadena = new QString;
-    fechaEstilo = new QString;
     transformador = new QLocale;
     centralWidget = new QWidget;
     dialogoAdd = nullptr;//Importantísimo inicializarlo a nullptr.
@@ -43,13 +42,15 @@ VentanaPrincipal::VentanaPrincipal()
 
     QMap<QString,unsigned long long int> mapaContador;//Almacenará el mapa de contadores del archivo.
 
+    QString fechaEstilo;
+
     fecha->currentDate().getDate(&anio,&mes,&dia);
 
     *fechaCadena = "<h1><center>" + transformador->toString(dia) + "/" + transformador->toString(mes) + "/" + transformador->toString(anio) + "</center></h1>";
-    *fechaEstilo = "color: #2d93ca; font: lighter;";
+    fechaEstilo = "color: #2d93ca; font: lighter;";
 
     fechaLabel->setText(*fechaCadena);
-    fechaLabel->setStyleSheet(*fechaEstilo);
+    fechaLabel->setStyleSheet(fechaEstilo);
 
     verticalLayout->addWidget(fechaLabel);
     verticalLayout->addSpacing(10);

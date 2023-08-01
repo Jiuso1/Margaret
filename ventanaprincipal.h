@@ -6,6 +6,7 @@
 #include "dialogo_anadirprograma.h"
 #include "dialogo_eliminarprograma.h"
 
+//Declaraciones previas:
 class QCloseEvent;
 class QLabel;
 class QVBoxLayout;
@@ -18,46 +19,45 @@ class QAction;
 class QMenu;
 class QTableWidget;
 
-class VentanaPrincipal : public QMainWindow
+class VentanaPrincipal : public QMainWindow //VentanaPrincipal es una ventana principal (hereda de QMainWindow).
 {
-    Q_OBJECT
+    Q_OBJECT //Tenemos SIGNAL y SLOT, es necesaria la macro Q_OBJECT.
 
 public:
-    VentanaPrincipal();
-    void createActions();
-    void createToolBars();
-    void createMenus();
-    void setFecha(QDate *fecha);//El monitor continuamente revisará si la fecha cambia. Si la fecha cambia, nos asignará una nueva fecha con este método.
-    void setPrograma(const QStringList &programa);//Se asigna a la lista de programas deseados a monitorizar la lista de programas leída desde el archivo por el monitor.
-    void setContador(const QStringList &contador);//Asignamos a la lista de contadores la lista de contadores dada. El monitor se preocupará por darnos la lista actualizada correctamente.
+    VentanaPrincipal();//Constructor.
+    void createActions();//Crea las acciones de la aplicación.
+    void createMenus();//Crea los menús, añadiéndoles acciones.
+    void setFecha(QDate *fecha);//Asigna a fechaLabel el QDate pasado por parámetro, siguiendo el formato Día/Mes/Año.
+    void setPrograma(const QStringList &programa);//Asigna al QStringList programa el QStringList pasado por parámetro.
+    void setContador(const QStringList &contador);//Asigna al QStringList contador el QStringList pasado por parámetro.
     bool guardarContador();//Guarda los contadores en un archivo. Para ello llama a un método del monitor.
-    QMap<QString,unsigned long long int> leerContador();//Lee los contadores de un archivo. Le pasaremos el mapa al monitor.
+    QMap<QString,unsigned long long int> leerContador();//Lee un mapa<programa,contador> desde un archivo y lo retorna. Si el día del archivo es diferente al día actual retorna un mapa vacío.
+
 protected:
-    void closeEvent(QCloseEvent *event);
+    void closeEvent(QCloseEvent *event);//Se ejecuta al cerrar la aplicación. Guarda los contadores en un archivo.
 
 private slots:
-    void anadirPrograma();//Se llamará a este slot cuando pulsemos en el botón indicado.
-    void eliminarPrograma();//Abrirá el diálogo de eliminar programa.
+    void anadirPrograma();//Abre el diálogo dialogo_anadirprograma.
+    void eliminarPrograma();//Abre el diálogo dialogo_eliminarprograma.
 
 private:
-    QLabel *fechaLabel;//Label que almacena la fecha.
-    QVBoxLayout *verticalLayout;//Layout en el que incluiremos los diferentes widgets.
-    QDate *fecha;//Con este objeto obtendremos la fecha actual del sistema usando el método currentDate().
-    QLocale *transformador;//Nos permitirá pasar de int a QString.
-    QString *fechaCadena;//Almacenará la cadena que le pasaremos a fechaLabel para que la muestre.
-    QString *fechaEstilo;
-    QWidget *centralWidget;//Este widget lo pondremos en el centro de nuestra ventana QMainWindow. Este contendrá el layout principal.
-    QAction *anadirProgramaAction;//Este QAction será añadido a una QToolBar. Será responsable de abrir la ventana diálogo encargada de solicitar la información del nuevo programa en la lista.
-    QAction *eliminarProgramaAction;//Homólogo al QAction de arriba, pero para abrir la ventana diálogo encargada de eliminar el programa deseado.
-    QAction *aboutQtAction;//QAction encargado de abrir la información sobre la versión de Qt empleada.
-    QAction *ayudaMargaretAction;
-    QMenu *programasMenu;
-    QMenu *ayudaMenu;
-    dialogo_anadirprograma *dialogoAdd;
-    dialogo_eliminarprograma *dialogoRemove;
-    Monitor *monitor;//Es el encargado de hablar con el sistema operativo y de calcular los tiempos.
-    QTableWidget *tabla;
-    int i;//Se incrementará cada vez que se añada una celda de un programa deseado.
+    QLabel *fechaLabel;//Muestra la fecha actual.
+    QVBoxLayout *verticalLayout;//Dispone verticalmente a fechaLabel y a tabla.
+    QDate *fecha;//Almacena la fecha actual del sistema usando el método currentDate().
+    QLocale *transformador;//Permite transformar int a QString usando el método toString().
+    QString *fechaCadena;//Almacena la fecha actual.
+    QWidget *centralWidget;//Es central y contiene el layout principal.
+    QAction *anadirProgramaAction;//Está enlazado con el slot anadirPrograma().
+    QAction *eliminarProgramaAction;//Está enlazado con el slot eliminarPrograma().
+    QAction *aboutQtAction;//Está enlazado con el slot aboutQt().
+    QAction *ayudaMargaretAction;//PENDIENTE POR HACER.
+    QMenu *programasMenu;//Contiene anadirProgramaAction y eliminarProgramaAction.
+    QMenu *ayudaMenu;//Contiene aboutQtAction y ayudaMargaretAction.
+    dialogo_anadirprograma *dialogoAdd;//Pregunta qué programas añadir.
+    dialogo_eliminarprograma *dialogoRemove;//Pregunta qué programas eliminar.
+    Monitor *monitor;//Habla con el sistema operativo y calcula los tiempos.
+    QTableWidget *tabla;//Muestra los datos.
+    int i;//Incrementa cada vez que se añade un nuevo programa deseado.
     int nColumnas;//Almacena el número de columnas.
     QStringList *programa;//Almacena los programas deseados a monitorizar.
     QStringList *contador;//Almacena los contadores respectivos a cada programa deseado a monitorizar.
