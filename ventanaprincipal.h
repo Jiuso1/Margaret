@@ -32,6 +32,7 @@ public:
     void setContador(const QStringList &contador);//Asigna al QStringList contador el QStringList pasado por parámetro.
     bool guardarContador();//Guarda los contadores en un archivo. Para ello llama a un método del monitor.
     QMap<QString,unsigned long long int> leerContador();//Lee un mapa<programa,contador> desde un archivo y lo retorna. Si el día del archivo es diferente al día actual retorna un mapa vacío.
+    void reservarMemoria();//Reserva memoria para los atributos punteros distintos a menús y acciones.
 
 protected:
     void closeEvent(QCloseEvent *event);//Se ejecuta al cerrar la aplicación. Guarda los contadores en un archivo.
@@ -57,7 +58,6 @@ private:
     dialogo_eliminarprograma *dialogoRemove;//Pregunta qué programas eliminar.
     Monitor *monitor;//Habla con el sistema operativo y calcula los tiempos.
     QTableWidget *tabla;//Muestra los datos.
-    int i;//Incrementa cada vez que se añade un nuevo programa deseado.
     int nColumnas;//Almacena el número de columnas.
     QStringList *programa;//Almacena los programas deseados a monitorizar.
     QStringList *contador;//Almacena los contadores respectivos a cada programa deseado a monitorizar.

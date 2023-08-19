@@ -20,19 +20,9 @@
 
 VentanaPrincipal::VentanaPrincipal()
 {
-    //Reservamos memoria a los punteros:
-    verticalLayout = new QVBoxLayout;
-    fechaLabel = new QLabel;
-    fecha = new QDate;
-    fechaCadena = new QString;
-    transformador = new QLocale;
-    centralWidget = new QWidget;
-    dialogoAdd = nullptr;//dialogoAdd igual nunca se abre, no le reservaremos memoria por defecto, lo inicializamos a nullptr.
-    tabla = new QTableWidget;
-    i = 0;//El número de filas de la tabla es 0 hasta que no sepamos nProgramasDeseados.
+    reservarMemoria();//Reserva memoria a los atributos punteros distintos a menús y acciones.
+
     nColumnas = 2;//El número de columnas de la tabla siempre será 2 (columna "Programa" y columna "Tiempo").
-    programa = new QStringList;
-    contador = new QStringList;
 
     int dia = 0,mes = 0,anio = 0, nProgramasDeseados = 0;
 
@@ -218,4 +208,19 @@ QMap<QString,unsigned long long int> VentanaPrincipal::leerContador(){
 //Se ejecuta al cerrarse la aplicación. Guarda el mapa de contadores en el archivo.
 void VentanaPrincipal::closeEvent(QCloseEvent *event){
     guardarContador();//Guarda el mapa de contadores en el archivo.
+}
+
+//Reserva memoria a los punteros atributos de VentanaPrincipal distintos a menús y acciones.
+void VentanaPrincipal::reservarMemoria(){
+    //Reservamos memoria a los punteros:
+    verticalLayout = new QVBoxLayout;
+    fechaLabel = new QLabel;
+    fecha = new QDate;
+    fechaCadena = new QString;
+    transformador = new QLocale;
+    centralWidget = new QWidget;
+    dialogoAdd = nullptr;//dialogoAdd igual nunca se abre, no le reservaremos memoria por defecto, lo inicializamos a nullptr.
+    tabla = new QTableWidget;
+    programa = new QStringList;
+    contador = new QStringList;
 }
