@@ -40,6 +40,7 @@ protected:
 private slots:
     void anadirPrograma();//Abre el diálogo dialogo_anadirprograma.
     void eliminarPrograma();//Abre el diálogo dialogo_eliminarprograma.
+    void aboutMargaret();//Abre una ventana de información sobre Margaret.
 
 private:
     QLabel *fechaLabel;//Muestra la fecha actual.
@@ -52,6 +53,7 @@ private:
     QAction *eliminarProgramaAction;//Está enlazado con el slot eliminarPrograma().
     QAction *aboutQtAction;//Está enlazado con el slot aboutQt().
     QAction *ayudaMargaretAction;//PENDIENTE POR HACER.
+    QAction *aboutMargaretAction;//Está enlazado con el slot aboutMargaret().
     QMenu *programasMenu;//Contiene anadirProgramaAction y eliminarProgramaAction.
     QMenu *ayudaMenu;//Contiene aboutQtAction y ayudaMargaretAction.
     dialogo_anadirprograma *dialogoAdd;//Pregunta qué programas añadir.

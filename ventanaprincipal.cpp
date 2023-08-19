@@ -17,6 +17,7 @@
 #include <QHeaderView>
 #include <QMap>
 #include <QFile>
+#include <QMessageBox>
 
 VentanaPrincipal::VentanaPrincipal()
 {
@@ -118,6 +119,11 @@ void VentanaPrincipal::eliminarPrograma(){
     dialogoRemove->show();//Mostramos el diálogo.
 }
 
+//SLOT que muestra una ventana de información con QMessage::about().
+void VentanaPrincipal::aboutMargaret(){
+    QMessageBox::about(this, "Acerca de Margaret", "<h2>Margaret</h2> <h3>Versión Alpha 1 - Agosto de 2023</h3> <p>Margaret es una aplicación de software libre con <a href=\"https://www.gnu.org/licenses/gpl-3.0.en.html#license-text\">licencia GPL-3.0</a> <br> que cuantifica el tiempo de ejecución de las aplicaciones deseadas a monitorizar. </p> <p>Todo el código se encuentra en <a href=\"https://github.com/Jiuso1/Margaret\">GitHub</a> </p>");//El método about muestra la primera cadena como título del diálogo, y la segunda cadena como texto dentro del diálogo. Usamos formato HTML.
+}
+
 //Reserva memoria para las acciones, les asigna texto y realiza la conexión SIGNAL-SLOT.
 void VentanaPrincipal::createActions(){
     //Creamos las siguientes acciones:
@@ -126,15 +132,17 @@ void VentanaPrincipal::createActions(){
     aboutQtAction = new QAction("Acerca de &Qt",this);//Acción "Acerca de Qt" con atajo de teclado Q.
     ayudaMargaretAction = new QAction("&Documentación de Margaret",this);//Acción "Documentación de Margaret" con atajo de teclado D.
     ayudaMargaretAction->setVisible(false);//Ocultamos la acción "Documentación de Margaret" porque no tenemos lista la documentación todavía.
+    aboutMargaretAction = new QAction("Acerca de &Margaret",this);//Acción "Acerca de Margaret" con atajo de teclado M.
 
     //Cuando una acción se pulsa, emite la señal triggered. Sabiendo esto
     //realizamos la conexión SIGNAL-SLOT:
     connect(anadirProgramaAction,SIGNAL(triggered()),this,SLOT(anadirPrograma()));//Al pulsar añadirProgramaAction se ejecuta el SLOT anadirPrograma.
     connect(eliminarProgramaAction,SIGNAL(triggered()),this,SLOT(eliminarPrograma()));//Al pulsar eliminarProgramaAction se ejecuta el SLOT eliminarPrograma.
     connect(aboutQtAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));//Al pulsar aboutQtAction se ejecuta el SLOT aboutQt. Como este SLOT se encuentra en qApp y no en VentanaPrincipal, le pasamos qApp y no this.
+    connect(aboutMargaretAction, SIGNAL(triggered()), this, SLOT(aboutMargaret()));//Al pulsar aboutMargaretAction se ejecuta el SLOT aboutMargaret.
 }
 
-//Crea los menús añadiéndolos a la menuBar de la ventana principal.
+//Crea los menús añadiéndoles las acciones y añadiéndolos a la menuBar de la ventana principal.
 void VentanaPrincipal::createMenus(){
     programasMenu = menuBar()->addMenu(tr("&Programas"));//Crea el menú "Programas" con atajo de teclado P y lo añade a la menuBar.
     //programasMenu apuntará al menú "Programas".
@@ -142,8 +150,9 @@ void VentanaPrincipal::createMenus(){
     programasMenu->addAction(anadirProgramaAction);
     programasMenu->addAction(eliminarProgramaAction);
     ayudaMenu = menuBar()->addMenu(tr("&Ayuda"));//Crea el menú "Ayuda" con atajo de teclado A y lo añade a la menuBar.
-    //Añadimos las acciones "Acerca de Qt" y "Documentación de Margaret" al menú "Ayuda":
+    //Añadimos las acciones "Documentación de Margaret", "Acerca de Margaret" y "Acerca de Qt" al menú "Ayuda":
     ayudaMenu->addAction(ayudaMargaretAction);
+    ayudaMenu->addAction(aboutMargaretAction);
     ayudaMenu->addAction(aboutQtAction);
 }
 
