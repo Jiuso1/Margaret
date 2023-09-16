@@ -25,14 +25,18 @@ VentanaPrincipal::VentanaPrincipal()
 
     nColumnas = 2;//El número de columnas de la tabla siempre será 2 (columna "Programa" y columna "Tiempo").
 
-    int dia = 0,mes = 0,anio = 0, nProgramasDeseados = 0;
+    //Declaramos las variables para almacenar la fecha y el número de programas deseados a monitorizar:
+    int dia = 0;
+    int mes = 0;
+    int anio = 0;
+    int nProgramasDeseados = 0;
 
     QTableWidgetItem *item = new QTableWidgetItem;//Reservamos memoria al puntero de la tabla.
 
     QFont fontProgramas;//Declaramos una fuente para los programas.
     fontProgramas.setBold(true);//Ponemos dicha fuente negrita.
 
-    QMap<QString,unsigned long long int> mapaContador;//Almacena el mapa de contadores del archivo.
+    QMap<QString,std::uint64_t> mapaContador;//Almacena el mapa de contadores del archivo.
 
     QString fechaEstilo;//Almacena el CSS de la fecha.
 
@@ -121,7 +125,7 @@ void VentanaPrincipal::eliminarPrograma(){
 
 //SLOT que muestra una ventana de información con QMessage::about().
 void VentanaPrincipal::aboutMargaret(){
-    QMessageBox::about(this, "Acerca de Margaret", "<h2>Margaret</h2> <h3>Versión Alpha 1 - Agosto de 2023</h3> <p>Margaret es una aplicación de software libre con <a href=\"https://www.gnu.org/licenses/gpl-3.0.en.html#license-text\">licencia GPL-3.0</a> <br> que cuantifica el tiempo de ejecución de las aplicaciones deseadas a monitorizar. </p> <p>Todo el código se encuentra en <a href=\"https://github.com/Jiuso1/Margaret\">GitHub</a> </p>");//El método about muestra la primera cadena como título del diálogo, y la segunda cadena como texto dentro del diálogo. Usamos formato HTML.
+    QMessageBox::about(this, "Acerca de Margaret", "<h2>Margaret</h2> <h3>Versión Alpha 1 - Agosto de 2023</h3> <p>Margaret es una aplicación de software libre con <a href=\"https://www.gnu.org/licenses/gpl-3.0.en.html#license-text\">licencia GPL-3.0</a> <br> que cuantifica el tiempo de ejecución de las aplicaciones deseadas a monitorizar. </p> <p>Todo el código se encuentra en <a href=\"https://github.com/Jiuso1/Margaret\">GitHub</a>.</p>");//El método about muestra la primera cadena como título del diálogo, y la segunda cadena como texto dentro del diálogo. Usamos formato HTML. Sergio García Macías añadió el puntito.
 }
 
 //Reserva memoria para las acciones, les asigna texto y realiza la conexión SIGNAL-SLOT.
@@ -186,8 +190,8 @@ bool VentanaPrincipal::guardarContador(){
 }
 
 //Lee los contadores del archivo y retorna el mapa<Proceso,Contador>.
-QMap<QString,unsigned long long int> VentanaPrincipal::leerContador(){
-    QMap<QString,unsigned long long int> mapaContador;//Mapea cada programa con su contador.
+QMap<QString,std::uint64_t> VentanaPrincipal::leerContador(){
+    QMap<QString,std::uint64_t> mapaContador;//Mapea cada programa con su contador.
 
     QDate *fecha = new QDate;//Contiene la fecha actual usando currentDate().
 

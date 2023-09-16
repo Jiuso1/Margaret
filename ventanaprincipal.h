@@ -31,11 +31,11 @@ public:
     void setPrograma(const QStringList &programa);//Asigna al QStringList programa el QStringList pasado por parámetro.
     void setContador(const QStringList &contador);//Asigna al QStringList contador el QStringList pasado por parámetro.
     bool guardarContador();//Guarda los contadores en un archivo. Para ello llama a un método del monitor.
-    QMap<QString,unsigned long long int> leerContador();//Lee un mapa<programa,contador> desde un archivo y lo retorna. Si el día del archivo es diferente al día actual retorna un mapa vacío.
+    QMap<QString,std::uint64_t> leerContador();//Lee un mapa<programa,contador> desde un archivo y lo retorna. Si el día del archivo es diferente al día actual retorna un mapa vacío.
     void reservarMemoria();//Reserva memoria para los atributos punteros distintos a menús y acciones.
 
 protected:
-    void closeEvent(QCloseEvent *event);//Se ejecuta al cerrar la aplicación. Guarda los contadores en un archivo.
+    void closeEvent(QCloseEvent *event);//Se ejecuta al cerrarse la aplicación. Guarda los contadores en un archivo.
 
 private slots:
     void anadirPrograma();//Abre el diálogo dialogo_anadirprograma.
