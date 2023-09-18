@@ -63,12 +63,13 @@ std::wstring nombreProceso(const std::wstring cadenaCompleta) {
     return nProceso;
 }
 bool contains(std::vector<WindowInfo> vectorWI, const std::string s) {
-    bool encontrado = false;
+    //bool encontrado = false;
     for (int i = 0; i < vectorWI.size(); i++) {
         std::string processNameString(vectorWI[i].processName.begin(), vectorWI[i].processName.end());//Así es como transformamos de wstring a string.
         if (processNameString.find(s) != std::string::npos) {
-            encontrado = true;
+            return true;
+            // encontrado = true;
         }
     }
-    return encontrado;
+    return false;
 }

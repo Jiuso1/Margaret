@@ -149,7 +149,7 @@ bool Monitor::guardarContador(){
         salida<<diaArchivo<<mesArchivo<<anhoArchivo<<mapaContador;//Escribimos la fecha de los contadores y el mapa.
         guardado = true;//Se han guardado con éxito los contadores.
         archivoEscritura.close();//Cerramos el archivo.
-    }
+   }
 
     return guardado;//Retornamos si se ha guardado o no.
 }
