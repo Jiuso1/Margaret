@@ -1,6 +1,6 @@
 # Margaret
 
-./mainWindow.png
+![Margaret's main window](./mainWindow.png)
 
 ## English
 
