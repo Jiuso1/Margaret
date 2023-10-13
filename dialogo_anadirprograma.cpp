@@ -16,9 +16,9 @@
 
 dialogo_anadirprograma::dialogo_anadirprograma(QWidget *parent) : QDialog(parent)
 {
-    //Importantísimo inicializar siempre las variables.
-    aceptarButton = new QPushButton(tr("&Aceptar"));
-    cancelarButton = new QPushButton(tr("&Cancelar"));
+    //Inicializamos las variables:
+    aceptarButton = new QPushButton(tr("&Aceptar"));//aceptarButton tiene el texto Aceptar y atajo de teclado Alt + A.
+    cancelarButton = new QPushButton(tr("&Cancelar"));//cancelarButton tiene el texto Cancelar y atajo de teclado Alt + C.
     verticalLayout = new QVBoxLayout;
     horizontalLayout = new QHBoxLayout;
     programasBox = new QGroupBox;
