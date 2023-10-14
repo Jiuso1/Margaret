@@ -1,5 +1,5 @@
 #include "dialogo_anadirprograma.h"
-#include "motor.h"//Muy importante incluir siempre solo los .h.
+#include "motor.h"
 #include "windowinfo.h"
 
 #include <QLabel>
@@ -14,6 +14,7 @@
 #include <QString>
 #include <QFile>
 
+//Constructor.
 dialogo_anadirprograma::dialogo_anadirprograma(QWidget *parent) : QDialog(parent)
 {
     //Inicializamos las variables:
@@ -23,155 +24,114 @@ dialogo_anadirprograma::dialogo_anadirprograma(QWidget *parent) : QDialog(parent
     horizontalLayout = new QHBoxLayout;
     programasBox = new QGroupBox;
     boxLayout = new QVBoxLayout;
-    nMaxProgramas = 50;//Pongamos 50 por ejemplo.
+    nMaxProgramas = 50;//El nº máximo de programas que Margaret puede monitorizar es 50.
+
+    //Inicializamos los punteros a nullptr:
     for(int i = 0;i < nMaxProgramas;i++){
-        check[i] = nullptr;//Importantísimo inicializar los punteros a nullptr, sino no estarán inicializados y se ejecutarán métodos sin tener memoria reservada a pesar del control if(puntero == nullptr).
+        check[i] = nullptr;
     }
 
-    actualizarProgramasAbiertos();
+    actualizarProgramasAbiertos();//Llena el boxLayout de QCheckbox con el nombre de programas abiertos actualmente.
 
-    programasBox->setTitle(tr("Seleccione los programas que desee monitorizar"));
-    programasBox->setLayout(boxLayout);
+    programasBox->setTitle(tr("Seleccione los programas que desee monitorizar"));//Asigna el texto que aparece por encima de los QCheckbox.
+    programasBox->setLayout(boxLayout);//Vincula el boxLayout lleno de programas con programasBox.
 
+    //Añadimos los widgets a los layout:
+
+    //Como cancelarButton y aceptarButton se disponen horizontalmente, se añaden a horizontalLayout:
     horizontalLayout->addWidget(cancelarButton);
     horizontalLayout->addWidget(aceptarButton);
+
+    //Como programasBox y horizontalLayout se disponen verticalmente, se añaden a verticalLayout:
     verticalLayout->addWidget(programasBox);
     verticalLayout->addLayout(horizontalLayout);
 
-    setLayout(verticalLayout);
+    setLayout(verticalLayout);//El diálogo tiene de layout verticalLayout.
 
-    setAttribute(Qt::WA_DeleteOnClose);//Al ponerle este atributo al diálogo, cuando se cierre se destruirá.
+    setAttribute(Qt::WA_DeleteOnClose);//Se activa la flag WA_DeleteOnClose. Cuando se cierre el diálogo se dejará de reservar toda su memoria.
 
-    connect(aceptarButton,SIGNAL(clicked()),this,SLOT(aceptar()));
-    connect(cancelarButton,SIGNAL(clicked()),this,SLOT(close()));
+    connect(aceptarButton,SIGNAL(clicked()),this,SLOT(aceptar()));//Al pulsar aceptarButton se ejecuta el SLOT aceptar.
+    connect(cancelarButton,SIGNAL(clicked()),this,SLOT(close()));//Al pulsar cancelarButton se ejecuta el SLOT close.
 
-    setWindowTitle(tr("Añadir programa"));
-
-    //qDebug()<<get_windowInfoList()[1].processName;
-
-    //Falta hacer un clear de windowInfo, ya veré cómo se hace. De momento no se actualizan los programas cuando se cierra y se abre el diálogo de nuevo.
-
-    /*std::vector<WindowInfo> windowInfoList = get_windowInfoList();//Hacemos copia de windowInfoList.
-
-    int nProgramas = windowInfoList.size();
-
-    QString nombreBoton[nProgramas];//Este array almacenará los nombres que se les asignarán a los botones checkables del diálogo.
-    std::wstring programa;//En cada iteración guardaremos a partir de la ruta completa que windowInfoList[i].processName nos ofrece, el nombre del programa usando la función nombreProceso de motor.h.
-
-    for(int i = 0;i < nProgramas;i++){
-        programa = nombreProceso(windowInfoList[i].processName);
-        nombreBoton[i] = QString::fromStdWString(programa);//Pasamos de WString a QString directamente, gracias a un método de la clase QString.
-    }
-
-    //Crearemos tantos checkbox como programas haya:
-    QCheckBox *check[nProgramas];
-
-    for(int i = 0;i < nProgramas;i++){//Por cada programa, crearé su propio botón check y se lo asignaré al layout.
-        check[i] = new QCheckBox(nombreBoton[i]);
-        boxLayout->addWidget(check[i]);//Lo añadimos al layout.
-    }
-
-    programasBox->setTitle(tr("Elija los programas que desee monitorizar"));
-    programasBox->setLayout(boxLayout);
-
-    horizontalLayout->addWidget(cancelarButton);
-    horizontalLayout->addWidget(aceptarButton);
-    verticalLayout->addWidget(programasBox);
-    verticalLayout->addLayout(horizontalLayout);
-
-    setLayout(verticalLayout);*/
+    setWindowTitle(tr("Añadir programa"));//El título de la ventana del diálogo es Añadir programa.
 }
 void dialogo_anadirprograma::actualizarProgramasAbiertos(){
-    //Ya se actualiza pero creamos demasiados checkboxes. Cuando se cierre el diálogo, deben eliminarse del layout las cosas. Entonces se arreglará todo.
     clear_windowInfoList();//Antes de rellenar la windowInfoList debemos limpiarla, para que no haya repeticiones del mismo programa.
 
     EnumWindows(EnumWindowsProc, NULL);//Rellenamos la windowInfoList.
 
-    //qDebug()<<get_windowInfoList().size();
+    std::vector<WindowInfo> windowInfoList = get_windowInfoList();//Se hace una copia de windowInfoList.
 
-    std::vector<WindowInfo> windowInfoList = get_windowInfoList();//Hacemos copia de windowInfoList.
+    nProgramas = windowInfoList.size();//El número de programas a mostrar es el tamaño de la windowInfoList.
 
-    //qDebug()<<windowInfoList.size();
+    QString nombreBoton[nProgramas];//El array nombreBoton almacenará los nombres que se les asignarán a los QCheckBox del diálogo.
+    std::wstring programa;//Nombre temporal de cada programa.
 
-    nProgramas = windowInfoList.size();
-
-    QString nombreBoton[nProgramas];//Este array almacenará los nombres que se les asignarán a los botones checkables del diálogo.
-    std::wstring programa;//En cada iteración guardaremos a partir de la ruta completa que windowInfoList[i].processName nos ofrece, el nombre del programa usando la función nombreProceso de motor.h.
-
-    for(int i = 0;i < nProgramas;i++){
-        programa = nombreProceso(windowInfoList[i].processName);
-        nombreBoton[i] = QString::fromStdWString(programa);//Pasamos de WString a QString directamente, gracias a un método de la clase QString.
+    for(int i = 0;i < nProgramas;i++){//Por cada programa de la windowInfoList:
+        programa = nombreProceso(windowInfoList[i].processName);//programa vale el nombre del proceso del programa de la windowInfoList.
+        nombreBoton[i] = QString::fromStdWString(programa);//Casting de WString a QString, gracias a un método de la clase QString.
     }
 
-    //Crearemos tantos checkbox como programas haya:
+    //Crearemos tantos QCheckBox como programas haya:
 
-    for(int i = 0;i < nProgramas;i++){//Por cada programa, crearé su propio botón check y se lo asignaré al layout.
-        //check[i] = new QCheckBox(nombreBoton[i]);
-        //boxLayout->addWidget(check[i]);//Lo añadimos al layout.
-        if(check[i] == nullptr){//Solo reservamos memoria si no lo habíamos hecho antes. La reservamos con el texto indicado.
-            check[i] = new QCheckBox(nombreBoton[i]);
-            boxLayout->addWidget(check[i]);
-        }else{//Si ya hay memoria reservada, simplemente cambiamos el texto.
-            check[i]->setText(nombreBoton[i]);
-        }
-    }
-    for(int i = nProgramas;i < nMaxProgramas;i++){//Este for es para eliminar el resto de checkboxes que queden fuera del nº de programas actual.
-        if(check[i] != nullptr){//Si el checkbox tiene memoria reservada (si no la tiene no tenemos que hacer nada).
-            check[i]->hide();//Lo ocultamos. Si no lo ocultamos seguirá apareciendo en el diálogo, a pesar de eliminarlo del layout (se vería feo además).
-            boxLayout->removeWidget(check[i]);//Lo eliminamos del layout.
-        }
+    for(int i = 0;i < nProgramas;i++){//Por cada programa, se crea su propio QCheckBox y se añade al layout.
+        check[i] = new QCheckBox(nombreBoton[i]);//Se reserva memoria para el QCheckBox con el nombre deseado.
+        boxLayout->addWidget(check[i]);//Añadimos este al boxLayout.
     }
 }
+
+//SLOT que guarda los programas seleccionados en un archivo.
 void dialogo_anadirprograma::aceptar(){
-    QFile archivoLectura("programas.dat");
-    if(!archivoLectura.open(QIODevice::ReadOnly)){
+    QFile archivoLectura("programas.dat");//Los programas deseados a monitorizar se almacenarán en el archivo programas.dat.
+    if(!archivoLectura.open(QIODevice::ReadOnly)){//Si no se consigue abrir el archivo en modo solo lectura:
+        //Se informa del error por consola:
         qDebug()<<"No se pudo abrir el archivo";
         qDebug()<<qPrintable(archivoLectura.errorString());
-        //Quitamos el return por si no existe.
     }
-    /*
-    En el array programa almacenaremos los programas que ya se encontraban
-    antes en el fichero, y también almacenaremos los nuevos programas a añadir
-    al fichero.
-    */
-    //QString programa[nMaxProgramas];
-    QList<QString> programa;
-    QString pr;
-    QDataStream entrada(&archivoLectura);
-    entrada.setVersion(QDataStream::Qt_6_4);
 
-    int i = 0;//Para iterar.
+    QList<QString> programa;//programa es una lista de QString que almacenará los todos los programas a guardar.
+    QString pr;//pr almacenará en cada iteración el programa a almacenar.
+
+    QDataStream entrada(&archivoLectura);//entrada nos permite leer línea por línea el archivo.
+    entrada.setVersion(QDataStream::Qt_6_4);//Se emplea la versión Qt_6_4 para ello.
+
+    int i = 0;//Iterador i.
     bool cadenaVacia = false;//Si encontramos una cadena vacía, valdrá true.
-    while(i < nMaxProgramas && !cadenaVacia){
-        //entrada>>programa[i];
-        entrada>>pr;
-        if(/*programa[i]*/pr == ""){
+
+    while(i < nMaxProgramas && !cadenaVacia){//Mientras no hayamos pasado el número máximo de programas ni hayamos encontrado cadena vacía:
+        entrada>>pr;//pr vale la línea leída del archivo.
+        if(pr == ""){//Si pr es cadena vacía, asignamos true a cadenaVacia:
             cadenaVacia = true;
-        }else{
-            programa.push_back(pr);
-            i++;
+        }else{//Si no:
+            programa.push_back(pr);//Se añade a la lista de programas del archivo.
+            i++;//Se incrementa el iterador.
         }
     }
-    archivoLectura.close();
+    archivoLectura.close();//Cierra el archivo.
 
-    QFile archivoEscritura("programas.dat");
-    if(!archivoEscritura.open(QIODevice::WriteOnly)){
+    QFile archivoEscritura("programas.dat");//Abriremos programas.dat en modo solo escritura.
+    if(!archivoEscritura.open(QIODevice::WriteOnly)){//Si no se consigue abrir el archivo en solo escritura:
+        //Se informa del error por consola:
         qDebug()<<"No se pudo abrir el archivo";
         qDebug()<<qPrintable(archivoEscritura.errorString());
-        return;
+
+        return;//Termina la ejecución, sin haberse podido escribir la lista de programas.
     }
+
     QDataStream salida(&archivoEscritura);
     salida.setVersion(QDataStream::Qt_6_4);
+
+    //Iteramos cada check:
     for(int i = 0;i < nProgramas;i++){
-        if(check[i]->isChecked() && !programa.contains(check[i]->text())){
-            //Si el check está checkado y no está en los programas anteriores...
-            //salida<<check[i]->text();
-            programa.push_back(check[i]->text());
+        if(check[i]->isChecked() && !programa.contains(check[i]->text())){//Si check está checkado y su nombre no está en el archivo:
+            programa.push_back(check[i]->text());//Se añade el nombre a la lista de programas del archivo.
         }
     }
-    for(int i = 0;i < programa.size();i++){
-        salida<<programa[i];
+
+    for(int i = 0;i < programa.size();i++){//Iteramos la lista programa:
+        salida<<programa[i];//Se escribe cada programa en la salida (en el archivo programas.dat).
     }
-    archivoEscritura.close();
-    close();
+
+    archivoEscritura.close();//Se cierra el fichero.
+    close();//Se cierra el diálogo.
 }

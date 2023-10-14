@@ -19,6 +19,7 @@
 #include <QFile>
 #include <QMessageBox>
 
+//Constructor.
 VentanaPrincipal::VentanaPrincipal()
 {
     reservarMemoria();//Reserva memoria a los atributos punteros distintos a menús y acciones.
@@ -125,7 +126,7 @@ void VentanaPrincipal::eliminarPrograma(){
 
 //SLOT que muestra una ventana de información con QMessage::about().
 void VentanaPrincipal::aboutMargaret(){
-    QMessageBox::about(this, "Acerca de Margaret", "<h2>Margaret</h2> <h3>Versión Alpha 1 - Agosto de 2023</h3> <p>Margaret es una aplicación de software libre con <a href=\"https://www.gnu.org/licenses/gpl-3.0.en.html#license-text\">licencia GPL-3.0</a> <br> que cuantifica el tiempo de ejecución de las aplicaciones deseadas a monitorizar. </p> <p>Todo el código se encuentra en <a href=\"https://github.com/Jiuso1/Margaret\">GitHub</a>.</p>");//El método about muestra la primera cadena como título del diálogo, y la segunda cadena como texto dentro del diálogo. Usamos formato HTML. Sergio García Macías añadió el puntito.
+    QMessageBox::about(this, "Acerca de Margaret", "<h2>Margaret</h2> <h3>Versión Alpha 2 - Octubre de 2023</h3> <p>Margaret es una aplicación de software libre con <a href=\"https://www.gnu.org/licenses/gpl-3.0.en.html#license-text\">licencia GPL-3.0</a> <br> que cuantifica el tiempo de ejecución de las aplicaciones deseadas a monitorizar. </p> <p>Todo el código se encuentra en <a href=\"https://github.com/Jiuso1/Margaret\">GitHub</a>.</p>");//El método about muestra la primera cadena como título del diálogo, y la segunda cadena como texto dentro del diálogo. Usamos formato HTML. Sergio García Macías añadió el puntito.
 }
 
 //Reserva memoria para las acciones, les asigna texto y realiza la conexión SIGNAL-SLOT.
