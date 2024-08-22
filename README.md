@@ -10,7 +10,7 @@ The license chosen is the GPL v3.0 license.
 
 If you want to check out our app, just download the [installer](https://sourceforge.net/projects/margaretgui/).
 
-Talentedly made [moon icon](https://www.flaticon.com/free-icons/moon) by Freepik
+Talentedly made [moon icon](https://www.flaticon.com/free-icons/moon) by Freepik.
 
 ## Español
 
@@ -21,4 +21,4 @@ La licencia escogida es la licencia GPL v3.0.
 
 Si quieres probar nuestra aplicación, simplemente descarga el [instalador](https://sourceforge.net/projects/margaretgui/).
 
-Talentoso [icono lunar](https://www.flaticon.com/free-icons/moon) realizado por Freepik
+Talentoso [icono lunar](https://www.flaticon.com/free-icons/moon) realizado por Freepik.
