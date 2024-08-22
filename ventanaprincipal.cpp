@@ -44,7 +44,7 @@ VentanaPrincipal::VentanaPrincipal()
     fecha->currentDate().getDate(&anio,&mes,&dia);//dia, mes y anio tienen los valores actuales de la fecha.
 
     *fechaCadena = "<h1><center>" + transformador->toString(dia) + "/" + transformador->toString(mes) + "/" + transformador->toString(anio) + "</center></h1>";//Convertimos los tipo int a QString con transformador. Seguiremos el formato dia/mes/año. Como queremos la fecha centrada, añadimos HTML para centrarla.
-    fechaEstilo = "color: #2d93ca; font: lighter;";//El color de la fuente es azul y la línea es delgada.
+    fechaEstilo = "color: #2abcec; font: lighter;";//El color de la fuente es azul y la línea es delgada.
 
     fechaLabel->setText(*fechaCadena);//Le asignamos al label la fecha.
     fechaLabel->setStyleSheet(fechaEstilo);//Le añadimos estilo aL label.

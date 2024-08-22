@@ -10,6 +10,8 @@ The license chosen is the GPL v3.0 license.
 
 If you want to check out our app, just download the [installer](https://sourceforge.net/projects/margaretgui/).
 
+Talentedly made [moon icon](https://www.flaticon.com/free-icons/moon) by Freepik
+
 ## Español
 
 Margaret recibe su nombre en honor a Margaret Hamilton (ingeniera de software encargada de la programación del Apollo 11).
@@ -18,3 +20,5 @@ Es una plataforma que busca mejorar la vida de todos los usuarios y usuarias de 
 La licencia escogida es la licencia GPL v3.0.
 
 Si quieres probar nuestra aplicación, simplemente descarga el [instalador](https://sourceforge.net/projects/margaretgui/).
+
+Talentoso [icono lunar](https://www.flaticon.com/free-icons/moon) realizado por Freepik
