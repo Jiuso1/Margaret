@@ -44,7 +44,7 @@ VentanaPrincipal::VentanaPrincipal()
     fecha->currentDate().getDate(&anio,&mes,&dia);//dia, mes y anio tienen los valores actuales de la fecha.
 
     *fechaCadena = "<h1><center>" + transformador->toString(dia) + "/" + transformador->toString(mes) + "/" + transformador->toString(anio) + "</center></h1>";//Convertimos los tipo int a QString con transformador. Seguiremos el formato dia/mes/año. Como queremos la fecha centrada, añadimos HTML para centrarla.
-    fechaEstilo = "color: #2abcec; font: lighter;";//El color de la fuente es azul y la línea es delgada.
+    fechaEstilo = "font: lighter;";//La línea es delgada.
 
     fechaLabel->setText(*fechaCadena);//Le asignamos al label la fecha.
     fechaLabel->setStyleSheet(fechaEstilo);//Le añadimos estilo aL label.
@@ -82,7 +82,7 @@ VentanaPrincipal::VentanaPrincipal()
     tabla->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);//Las columnas se estiran automáticamente para ver el contenido.
 
     //CSS de la tabla:
-    QString tablaEstilo = "background-color: #e0f7ff; font-size: 14pt; font-weight: 350;";//El color de fondo es azul claro, el tamaño de fuente es de 14pt y el peso de la fuente es de 350 (línea delgada).
+    QString tablaEstilo = "font-size: 14pt; font-weight: 350;";//El tamaño de fuente es de 14pt y el peso de la fuente es de 350 (línea delgada).
     tabla->setStyleSheet(tablaEstilo);//Le asignamos a la tabla el CSS.
 
     //Añadimos tantos contadores como filas tenga la tabla, y los inicializamos a 0:
@@ -126,7 +126,7 @@ void VentanaPrincipal::eliminarPrograma(){
 
 //SLOT que muestra una ventana de información con QMessage::about().
 void VentanaPrincipal::aboutMargaret(){
-    QMessageBox::about(this, "Acerca de Margaret", "<h2>Margaret</h2> <h3>Versión Alpha 2 - Octubre de 2023</h3> <p>Margaret es una aplicación de software libre con <a href=\"https://www.gnu.org/licenses/gpl-3.0.en.html#license-text\">licencia GPL-3.0</a> <br> que cuantifica el tiempo de ejecución de las aplicaciones deseadas a monitorizar. </p> <p>Todo el código se encuentra en <a href=\"https://github.com/Jiuso1/Margaret\">GitHub</a>.</p>");//El método about muestra la primera cadena como título del diálogo, y la segunda cadena como texto dentro del diálogo. Usamos formato HTML. Sergio García Macías añadió el puntito.
+    QMessageBox::about(this, "Acerca de Margaret", "<h2>Margaret</h2> <h3>Versión Alpha 2 - Noviembre de 2024</h3> <p>Margaret es una aplicación de software libre con <a href=\"https://www.gnu.org/licenses/gpl-3.0.en.html#license-text\">licencia GPL-3.0</a> <br> que cuantifica el tiempo de ejecución de las aplicaciones deseadas a monitorizar. </p> <p>Todo el código se encuentra en <a href=\"https://github.com/Jiuso1/Margaret\">GitHub</a>.</p>");//El método about muestra la primera cadena como título del diálogo, y la segunda cadena como texto dentro del diálogo. Usamos formato HTML. Sergio García Macías añadió el puntito.
 }
 
 //Reserva memoria para las acciones, les asigna texto y realiza la conexión SIGNAL-SLOT.
