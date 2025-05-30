@@ -14,12 +14,12 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 set(PROJECT_SOURCES
         main.cpp
-        ventanaprincipal.h ventanaprincipal.cpp
-        dialogo_anadirprograma.h dialogo_anadirprograma.cpp
+        mainwindow.h mainwindow.cpp
+        dialog_addprogram.h dialog_addprogram.cpp
         monitor.h monitor.cpp
         windowinfo.h
-        motor.cpp motor.h
-        dialogo_eliminarprograma.h dialogo_eliminarprograma.cpp
+        engine.cpp engine.h
+        dialog_deleteprogram.h dialog_deleteprogram.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

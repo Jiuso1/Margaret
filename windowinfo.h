@@ -1,12 +1,12 @@
 #ifndef WINDOWINFO_H
 #define WINDOWINFO_H
 
-#include <string>//std::wstring incluido en string.
+#include <string> // std::wstring is included via string.
 
-//Estructura WindowInfo:
+// WindowInfo structure:
 struct WindowInfo {
-    std::wstring windowTitle;//Nombre de la ventana.
-    std::wstring processName;//Nombre del proceso.
+    std::wstring windowTitle;  // Window title.
+    std::wstring processName;  // Process name.
 };
 
 #endif // WINDOWINFO_H

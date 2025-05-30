@@ -2,23 +2,37 @@
 
 ![Margaret's main window](./mainWindow.png)
 
-## English
+# What it is
 
-Margaret is named after Margaret Hamilton (software engineer in charge of programming Apollo 11). It is a platform that seeks to improve the lives of all computer users by quantifying the hours per application, in order to better manage the time we spend between screens. Right now Margaret only quantifies the hours per application in Windows, but in the future it will be multiplatform and will support full synchronization between our devices.
+Margaret is named after Margaret Hamilton (software engineer in charge of Apollo 11). It is a platform that seeks to improve the lives of all computer users by quantifying the hours per application, in order to manage better the time we spend between screens. Right now Margaret only quantifies the hours per application in Windows, but in the future, it will be multiplatform.
+
+# Considerations
+
+As Margaret was my first big project, I made huge mistakes: writing its code in Spanish and not using software engineering (UML, design patterns, etc). Due to that fact, the project needs refactoring, but the good thing is that I've started to do so. I've translated all the code using DeepL and Microsoft Copilot, and I'm sure we'll reach clean code!
+
+# Known bugs
+
+* BG_00: If you add or delete a program, you need to restart Margaret to see any changes in the main window.
+
+# To do
+
+* Solve BG_00.
+* Transform multiple variables declaration to single variable declaration.
+* Generate a PlantUML class diagram and simplify it.
+* Apply design patterns.
+
+# Try Margaret
+
+## Recommended (updated)
+
+Clone this repository, open it with Qt Creator, and execute.
+
+## Not recommended (deprecated)
+
+Download the old Spanish [installer](https://sourceforge.net/projects/margaretgui/). 
+
+# Project license and attributions
 
 The license chosen is the GPL v3.0 license.
 
-If you want to check out our app, just download the [installer](https://sourceforge.net/projects/margaretgui/).
-
 Talentedly made [moon icon](https://www.flaticon.com/free-icons/moon) by Freepik.
-
-## Español
-
-Margaret recibe su nombre en honor a Margaret Hamilton (ingeniera de software encargada de la programación del Apollo 11).
-Es una plataforma que busca mejorar la vida de todos los usuarios y usuarias de informática. ¿Cómo? Cuantificando las horas por aplicación, para así gestionar mejor el tiempo que pasamos entre pantallas. Ahora mismo Margaret solo cuantifica las horas por aplicación en Windows, pero en el futuro será multiplataforma y admitirá una total sincronización entre nuestros dispositivos.
-
-La licencia escogida es la licencia GPL v3.0.
-
-Si quieres probar nuestra aplicación, simplemente descarga el [instalador](https://sourceforge.net/projects/margaretgui/).
-
-Talentoso [icono lunar](https://www.flaticon.com/free-icons/moon) realizado por Freepik.

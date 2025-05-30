@@ -2,38 +2,35 @@
 #define MONITOR_H
 
 #include <QThread>
-#include <vector>
+#include <QMap> // Included because it's a template class and causes issues with forward declarations.
 
-#include <QMap>//Incluimos la clase porque tiene plantillas y tenemos problemas para hacer su declaración previa.
-
-//Declaraciones previas:
+// Forward declarations:
 class QString;
-class VentanaPrincipal;
+class MainWindow;
 class QLocale;
 class QDate;
 
-class Monitor : public QThread  //La clase Monitor es clase hija de QThread. El monitor es un hilo independiente a la respuesta de la interfaz.
+class Monitor : public QThread  // Monitor is a subclass of QThread. It runs independently from the GUI thread.
 {
 private:
-    QStringList programaArchivo;//Almacena el conjunto de programas a monitorizar. Este conjunto se almacena en programas.dat.
-    VentanaPrincipal *vPrincipal;//Ventana principal. El monitor poblará y actualizará la ventana principal.
-    QLocale *transformador;//Permite transformar int a QString usando el método toString().
-    int nMaxProgramas;//Número máximo de programas que se pueden monitorizar.
-    int nProgramas;//Número de programas deseados a monitorizar.
-    std::uint64_t tiempoPrograma[50];//En vez de 50 debería ser nMaxProgramas.
-    //tiempoPrograma[i] almacena el tiempo de ejecución en segundos del programa i.
-    int espera;//Tiempo de espera del monitor en segundos. Cuanto menor sea, mayor precisión de cálculo pero mayor consumo de recursos.
-    QDate *fecha;//Fecha actual.
-    QMap<QString,std::uint64_t> mapaContador;//Es el mapa que nos ha pasado la ventana principal. Mapa<programa,contador>.
+    QStringList programFile; // Stores the list of programs to monitor, loaded from programs.dat.
+    MainWindow *mainWindow; // Pointer to the main window. The monitor updates the main window.
+    QLocale *transformer; // Used to convert int to QString using toString().
+    int maxPrograms; // Maximum number of programs that can be monitored.
+    int nPrograms; // Number of programs to monitor.
+    std::uint64_t programTime[50]; // Should ideally be maxPrograms. Stores execution time in seconds for each program.
+    int waitTime; // Monitor's wait time in seconds. Lower values increase precision but also resource usage.
+    QDate *date; // Current date.
+    QMap<QString, std::uint64_t> counterMap; // Map passed from the main window. Format: <program, counter>.
 
 public:
-    Monitor(VentanaPrincipal *v = nullptr);//Constructor
-    Monitor(VentanaPrincipal *v, const QMap<QString,std::uint64_t> &mapaContador);//Constructor que pasa los contadores. Este se ejecuta cuando nos encontramos en el mismo día que en la iteración anterior.
-    int get_nProgramas();//Retorna el número de programas deseados a monitorizar.
-    bool guardarContador();//Guarda el mapa de contadores en un archivo, y retorna true si lo ha conseguido.
+    Monitor(MainWindow *w = nullptr); // Constructor.
+    Monitor(MainWindow *w, const QMap<QString, std::uint64_t> &counterMap); // Constructor with counters, used when the date hasn't changed.
+    int get_nPrograms(); // Returns the number of programs to monitor.
+    bool saveCounter(); // Saves the counter map to a file. Returns true if successful.
 
 protected:
-    void run();//Método que se ejecuta concurrentemente con la respuesta de la GUI. Cuenta el tiempo de las aplicaciones.
+    void run(); // Method executed concurrently with the GUI. Tracks application runtime.
 };
 
 #endif // MONITOR_H

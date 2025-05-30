@@ -1,155 +1,150 @@
 #include "windowinfo.h"
-#include "ventanaprincipal.h"
-#include "motor.h"
+#include "mainwindow.h"
+#include "engine.h"
 
 #include <QDebug>
 #include <windows.h>
-#include <string>
+#include <QString>
 #include <QLocale>
 #include <QFile>
 #include <QDate>
 
-Monitor::Monitor(VentanaPrincipal *v){
-    vPrincipal = v;//vPrincipal apunta a v (a la ventana principal original).
-    transformador = new QLocale;//Reservamos memoria para el transformador.
-    nMaxProgramas = 50;//En algún momento lo sincronizaremos con el resto.
-    nProgramas = 0;//Inicializamos a 0.
-    espera = 10;//Tendremos una espera de 10 segundos.
-    fecha = new QDate;//Reservamos memoria para la fecha.
-    for(int i = 0;i < nMaxProgramas;i++){//Debería estar en función de nMaxProgramas la declaración de tiempoPrograma.
-        tiempoPrograma[i] = 0;//Inicializamos a 0 el tiempo de cada programa.
+Monitor::Monitor(MainWindow *w) {
+    mainWindow = w; // mainWindow points to the original main window.
+    transformer = new QLocale; // Allocate memory for the transformer.
+    maxPrograms = 50; // Will eventually be synchronized with the rest.
+    nPrograms = 0; // Initialize to 0.
+    waitTime = 10; // Wait time of 10 seconds.
+    date = new QDate; // Allocate memory for the date.
+    for (int i = 0; i < maxPrograms; i++) {
+        programTime[i] = 0; // Initialize each program's time to 0.
     }
 }
 
-//El constructor será igual que el de arriba, lo único nuevo es que guardará el mapa pasado por parámetro en el atributo correspondiente.
-Monitor::Monitor(VentanaPrincipal *v, const QMap<QString,std::uint64_t> &mapaContador){
-    vPrincipal = v;//vPrincipal apunta a v (a la ventana principal original).
-    transformador = new QLocale;//Reservamos memoria para el transformador.
-    nMaxProgramas = 50;//En algún momento lo sincronizaremos con el resto.
-    nProgramas = 0;//Inicializamos a 0.
-    espera = 10;//Tendremos una espera de 10 segundos.
-    fecha = new QDate;//Reservamos memoria para la fecha.
-    for(int i = 0;i < nMaxProgramas;i++){//Debería estar en función de nMaxProgramas la declaración de tiempoPrograma.
-        tiempoPrograma[i] = 0;//Inicializamos a 0 el tiempo de cada programa.
+// Same as the above constructor, but also stores the counter map passed as a parameter.
+Monitor::Monitor(MainWindow *w, const QMap<QString, std::uint64_t> &counterMap) {
+    mainWindow = w;
+    transformer = new QLocale;
+    maxPrograms = 50;
+    nPrograms = 0;
+    waitTime = 10;
+    date = new QDate;
+    for (int i = 0; i < maxPrograms; i++) {
+        programTime[i] = 0;
     }
-    this->mapaContador = mapaContador;//Le asignamos al mapa de la clase Monitor el mapa pasado por parámetro.
+    this->counterMap = counterMap;
 }
 
-//Método que se ejecucuta concurrentemente con la respuesta de la GUI. Cuenta el tiempo de las aplicaciones.
-void Monitor::run(){
-    //Almacenaremos el día actual y el día previo en cada momento. Si son diferentes ambos días, es que hemos cambiado de día:
-    int dia = 0;
-    int diaPrevio = 0;
+// Method that runs concurrently with the GUI. Tracks application runtime.
+void Monitor::run() {
+    int day = 0;
+    int previousDay = 0;
 
-    int i = 0;//Iterador inicializado a 0.
-    bool cadenaVacia = false;//Si encontramos una cadena vacía, valdrá true.
-    QString pr;//Programa iterado.
+    int i = 0;
+    bool emptyString = false;
+    QString pr;
 
-    //Abrimos el archivo programas.dat, y si no da fallo su apertura continuamos en el código:
-    QFile archivoLectura("programas.dat");
-    if(!archivoLectura.open(QIODevice::ReadOnly)){
-        qDebug()<<"No se pudo abrir el archivo";
-        qDebug()<<qPrintable(archivoLectura.errorString());
+    QFile inputFile("programs.dat");
+    if (!inputFile.open(QIODevice::ReadOnly)) {
+        qDebug() << "Monitor: Could not open the file";
+        qDebug() << qPrintable(inputFile.errorString());
         return;
     }
 
-    //Leemos el contenido del archivo:
-    QDataStream entrada(&archivoLectura);//La entrada de datos vendrá por archivoLectura (que tiene abierto programas.dat).
-    entrada.setVersion(QDataStream::Qt_6_4);//La versión de Qt empleada para la lectura será Qt_6_4.
-    //Mientras no haya cadena vacía y no se haya pasado el límite de programas máximos a monitorizar:
-    while(!cadenaVacia && i < nMaxProgramas){
-        entrada>>pr;//Guardamos el programa en pr.
-        if(pr == ""){//Si la cadena es vacía.
-            cadenaVacia = true;//cadenaVacia es verdadero.
-        }else{//Si la cadena no es vacía.
-            programaArchivo.push_back(pr);//Añadimos al conjunto de programas leídos del archivo dicha cadena.
-            i++;//Incrementamos i para iterar.
+    QDataStream in(&inputFile);
+    in.setVersion(QDataStream::Qt_6_7);
+    while (!emptyString && i < maxPrograms) {
+        in >> pr;
+        if (pr == "") {
+            emptyString = true;
+        } else {
+            programFile.push_back(pr);
+            i++;
         }
     }
-    archivoLectura.close();//Cerramos el archivo.
-    nProgramas = programaArchivo.size();//El número de programas deseados a monitorizar será igual al número de programas leídos del archivo.
+    inputFile.close();
+    nPrograms = programFile.size();
 
-    QStringList contador;//Contadores de cada programa.
-    int segundos = 0, minutos = 0, horas = 0;//Segundos, minutos y horas inicializados a 0.
+    QStringList counter;
+    int seconds = 0, minutes = 0, hours = 0;
 
-    vPrincipal->setPrograma(programaArchivo);//vPrincipal tendrá la lista de programas deseados a monitorizar.
+    mainWindow->setProgram(programFile);
 
-    std::vector<WindowInfo> windowInfoList;//Conjunto que almacena estructuras WindowInfo (Nombre de la ventana,Nombre del proceso).
-    if(vPrincipal != nullptr){//Si vPrincipal tiene memoria reservada.
-        while(true){//Por siempre.
-            fecha->currentDate().getDate(NULL,NULL,&dia);//Se asigna a dia el día actual.
-            if(dia != diaPrevio){//Si el dia actual es diferente al diaPrevio (al dia almacenado anteriormente).
-                *fecha = fecha->currentDate();//Actualizamos la fecha actual.
-                vPrincipal->setFecha(fecha);//Actualizamos la fecha de la ventana.
-                diaPrevio = dia;//Se asigna a diaPrevio el dia actual.
-                for(int i = 0;i < nProgramas;i++){//Por cada programa.
-                    tiempoPrograma[i] = 0 + mapaContador[programaArchivo[i]];//El tiempo del programa será igual al tiempo registrado por Margaret en ese mismo día. Si no se ha usado el programa, el tiempo será 0.
-                    contador.append("0");//Añadimos tantos contadores como programas haya. Inicializamos a la cadena "0".
+    std::vector<WindowInfo> windowInfoList;
+    if (mainWindow != nullptr) {
+        while (true) {
+            date->currentDate().getDate(nullptr, nullptr, &day);
+            if (day != previousDay) {
+                *date = date->currentDate();
+                mainWindow->setDate(date);
+                previousDay = day;
+                for (int i = 0; i < nPrograms; i++) {
+                    programTime[i] = 0 + counterMap[programFile[i]];
+                    counter.append("0");
                 }
             }
 
-            mapaContador.clear();//Cuando hemos terminado de usar el diccionario, lo eliminamos.
-            clear_windowInfoList();//Eliminamos la lista de estructuras WindowInfo, para resetearla.
-            EnumWindows(EnumWindowsProc,NULL);//Se llena la windowInfoList del motor. Esta solo tendrá nombres de procesos con ventanas abiertas.
-            windowInfoList = get_windowInfoList();//Guardamos la windowInfoList del motor en la windowInfoList del monitor.
+            counterMap.clear();
+            clear_windowInfoList();
+            EnumWindows(EnumWindowsProc, NULL);
+            windowInfoList = get_windowInfoList();
 
-            for(int i = 0;i < nProgramas;i++){//Por cada programa.
-                if(tiempoPrograma[i] < 60){//Si el programa lleva menos de un minuto.
-                    contador[i] = transformador->toString(tiempoPrograma[i]) + " s";//Cadena formateada correctamente.
-                }else if(tiempoPrograma[i] < 3600){//Si el programa lleva menos de una hora.
-                    minutos = tiempoPrograma[i]/60;//Tiempo (segundos) / 60 = Tiempo (minutos).
-                    segundos = tiempoPrograma[i]%60;//Tiempo (>60 segundos) % 60 = Tiempo (<60 segundos). Hacer división a mano y se entenderá fácilmente.
-                    contador[i] = transformador->toString(minutos) + " min " + transformador->toString(segundos) + " s";//Cadena formateada correctamente.
-                }else{//Ya no tenemos que comprobar si es menor que un día, puesto que Margaret monitoriza cada día. Un programa no puede tener más de un día en ejecución para Margaret.
-                    horas = tiempoPrograma[i]/3600;//Tiempo (segundos) / 3600 = Tiempo (horas).
-                    minutos = tiempoPrograma[i]/60 - horas*60;//(Tiempo (segundos) / 60) - (Tiempo(horas) * 60) = Tiempo (minutos) - Tiempo (minutos) = Tiempo (minutos)
-                    contador[i] = transformador->toString(horas) + " h " + transformador->toString(minutos) + " min ";//Cadena formateada correctamente.
+            for (int i = 0; i < nPrograms; i++) {
+                if (programTime[i] < 60) {
+                    counter[i] = transformer->toString(programTime[i]) + " s";
+                } else if (programTime[i] < 3600) {
+                    minutes = programTime[i] / 60;
+                    seconds = programTime[i] % 60;
+                    counter[i] = transformer->toString(minutes) + " min " + transformer->toString(seconds) + " s";
+                } else {
+                    hours = programTime[i] / 3600;
+                    minutes = programTime[i] / 60 - hours * 60;
+                    counter[i] = transformer->toString(hours) + " h " + transformer->toString(minutes) + " min ";
                 }
-                if(contains(windowInfoList,programaArchivo[i].toStdString())){//Si el programa i está en la windowInfoList.
-                    tiempoPrograma[i] += espera;//Le sumamos la espera de tiempo a su tiempo de ejecución.
+                if (contains(windowInfoList, programFile[i].toStdString())) {
+                    programTime[i] += waitTime;
                 }
             }
-            vPrincipal->setContador(contador);//Actualizamos los contadores de la ventana principal.
-            sleep(espera);//Esperamos la espera hasta la próxima iteración.
+            mainWindow->setCounter(counter);
+            sleep(waitTime);
         }
     }
 }
 
-//Retorna el número de programas deseados a monitorizar.
-int Monitor::get_nProgramas(){
-    return nProgramas;//nProgramas vale el número de programas de programas.dat.
+// Returns the number of programs to monitor.
+int Monitor::get_nPrograms() {
+    return nPrograms;
 }
 
-//Guarda los contadores de cada programa en el archivo contadores.dat
-bool Monitor::guardarContador(){
-    bool guardado = false;//guardado vale true si se han conseguido guardar todos los contadores.
+// Saves the counters for each program to the file counters.dat
+bool Monitor::saveCounter() {
+    bool saved = false; // Will be true if all counters are successfully saved.
 
-    //En el archivo almacenamos la fecha de guardado, para que Margaret solo recoja los contadores si se encuentra en el mismo día.
-    //Inicializamos a 0:
-    int diaArchivo = 0;
-    int mesArchivo = 0;
-    int anhoArchivo = 0;
+    // The file stores the current date so Margaret only loads counters from the same day.
+    int fileDay = 0;
+    int fileMonth = 0;
+    int fileYear = 0;
 
-    QMap<QString,std::uint64_t> mapaContador;//Mapea cada programa con el contador correspondiente.
+    QMap<QString, std::uint64_t> counterMap; // Maps each program to its corresponding counter.
 
-    for(int i = 0;i < nProgramas;i++){
-        mapaContador.insert(programaArchivo[i],tiempoPrograma[i]);//Por cada programa añadido al archivo, almacenaremos su contador.
+    for (int i = 0; i < nPrograms; i++) {
+        counterMap.insert(programFile[i], programTime[i]); // Store each program's counter.
     }
 
-    //Abrimos contadores.dat en escritura:
-    QFile archivoEscritura("contadores.dat");
-    QDataStream salida(&archivoEscritura);
+    // Open counters.dat for writing:
+    QFile outputFile("counters.dat");
+    QDataStream out(&outputFile);
 
-    if(!archivoEscritura.open(QIODevice::WriteOnly)){
-        qDebug()<<"No se pudo abrir el archivo";
-        qDebug()<<qPrintable(archivoEscritura.errorString());//Se escribe un mensaje de error si ha fallado la apertura.
-    }else{//Si no falla la apertura.
-        salida.setVersion(QDataStream::Qt_6_4);//La versión de Qt empleada para escribir es Qt_6_4.
-        fecha->currentDate().getDate(&anhoArchivo, &mesArchivo, &diaArchivo);//Asignamos a anhoArchivo, mesArchivo y diaArchivo los valores correspondientes de la fecha actual.
-        salida<<diaArchivo<<mesArchivo<<anhoArchivo<<mapaContador;//Escribimos la fecha de los contadores y el mapa.
-        guardado = true;//Se han guardado con éxito los contadores.
-        archivoEscritura.close();//Cerramos el archivo.
-   }
+    if (!outputFile.open(QIODevice::WriteOnly)) {
+        qDebug() << "Monitor: Could not open the file";
+        qDebug() << qPrintable(outputFile.errorString()); // Print error message if opening fails.
+    } else {
+        out.setVersion(QDataStream::Qt_6_7); // Use Qt 6.7 format for writing.
+        date->currentDate().getDate(&fileYear, &fileMonth, &fileDay); // Get current date values.
+        out << fileDay << fileMonth << fileYear << counterMap; // Write date and counter map to file.
+        saved = true; // Successfully saved.
+        outputFile.close(); // Close the file.
+    }
 
-    return guardado;//Retornamos si se ha guardado o no.
+    return saved; // Return whether saving was successful.
 }
